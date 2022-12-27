@@ -42,9 +42,9 @@ funMain() {
 
     # About Shell and Evironments
     echo "\n# For Enviroments" >> $tacshFilePath
-    echo "if [ \$EUID != 0 ]; then" >> $tacshFilePath
-    echo "  admin () { command sudo -i ; } " >> $tacshFilePath
-    echo "fi" >> $tacshFilePath
+    if [ \$EUID != 0 ]; then
+        echo "  admin () { sudo -i ; } " >> $tacshFilePath
+    fi
     echo "shrl () { echo \"reloaded shell\" && exec -l $SHELL ; }" >> $tacshFilePath
     if [ "$(uname)" = "Darwin" ]; then 
         echo "macrl () { killall SystemUIServer ; killall Dock ; killall Finder ; echo \"reloaded macOS GUI\"}" >> $tacshFilePath
@@ -68,7 +68,8 @@ funMain() {
     echo "vi$shRc () { vi $HOME/.$shRc ; }" >> $tacshFilePath
     echo "vi$shLin () { vi $HOME/.$shLin ; }" >> $tacshFilePath
     echo "vi$shLout () { vi $HOME/.$shLout ; }" >> $tacshFilePath
-    echo "whichos () { command echo $(uname) ; }" >> $tacshFilePath
+    echo "vitacsh () { vi $tacshFilePath ; }" >> $tacshFilePath
+    echo "whichos () { echo $(uname) ; }" >> $tacshFilePath
     
     # About Default Commands Options & Colourising
     echo "\n# For Default Options" >> $tacshFilePath
