@@ -5,7 +5,7 @@ tacshDirPath="$HOME/.config/tacsh"
 tacshFilePath="$tacDirPath/tac.sh"
 
 funTitle() {
-    echo "$1    ______         ______ \n$1   /_  __/__ _____/ __/ / \n$1    / / / _ \`/ __/\\ \\/ _ \\ \n$1   /_/  \\_,_/\\__/___/_//_/ $tacshVer \n$1\t\t\t by leelsey \n$1"
+    echo -e "$1    ______         ______ \n$1   /_  __/__ _____/ __/ / \n$1    / / / _ \`/ __/\\ \\/ _ \\ \n$1   /_/  \\_,_/\\__/___/_//_/ $tacshVer \n$1\t\t\t by leelsey \n$1"
 }
 
 addFile() {
@@ -19,17 +19,19 @@ funMain() {
 
     if [ "$(uname)" = "Darwin" ]; then 
         icloudPath="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
-        dropboxPath="$HOME/Library/CloudStorage/Dropbox"        
+        dropboxPath="$HOME/Library/CloudStorage/Dropbox"
     elif [ "$(uname)" = "Linux" ]; then
         dropboxPath="$HOME/Dropbox"
     fi
     if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+        shType="zsh"
         shEnv="zshenv"
         shPf="zprofile"
         shRc="zshrc"
         shLin="zlogin"
         shLout="zlogout"
     elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+        shType="bash"
         shEnv="bash_env"
         shPf="bash_profile"
         shRc="bashrc"
@@ -46,7 +48,7 @@ funMain() {
         echo "  admin () { sudo -i ; } " >> $tacshFilePath
     fi
     echo "shrl () { echo \"reloaded shell\" && exec -l $SHELL ; }" >> $tacshFilePath
-    if [ "$(uname)" = "Darwin" ]; then 
+    if [ "$(uname)" = "Darwin" ]; then
         echo "macrl () { killall SystemUIServer ; killall Dock ; killall Finder ; echo \"reloaded macOS GUI\"}" >> $tacshFilePath
     fi
     echo "zshrl () {" >> $tacshFilePath
@@ -323,3 +325,4 @@ funMain() {
 
 # MAIN
 funTitle " "
+funMain
