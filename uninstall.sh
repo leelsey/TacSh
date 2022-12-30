@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
 tacshDirPath="$HOME/.config/tacsh"
-# tacshFilePath="$tacDirPath/tac.sh"
 
 echo '- Remove Alias4sh ... \c'
 if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then

@@ -2,7 +2,7 @@
 
 tacshVer="ver 0.1"
 tacshDirPath="$HOME/.config/tacsh"
-tacshFilePath="$tacDirPath/tac.sh"
+tacshFilePath="$tacshDirPath/tac.sh"
 
 funTitle() {
     echo -e "$1    ______         ______ \n$1   /_  __/__ _____/ __/ / \n$1    / / / _ \`/ __/\\ \\/ _ \\ \n$1   /_/  \\_,_/\\__/___/_//_/ $tacshVer \n$1\t\t\t by leelsey \n$1"
