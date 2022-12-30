@@ -15,7 +15,7 @@ addFile() {
 funMain() {
     mkdir -p $tacshDirPath
     touch $tacshFilePath && chmod 600 $tacshFilePath
-    funTitle "#"
+    funTitle "#" >> $tacshFilePath
 
     if [ "$(uname)" = "Darwin" ]; then 
         icloudPath="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
@@ -324,7 +324,5 @@ funMain() {
 
 
 # MAIN
-# funTitle " "
-# funMain
-
-addFile "alias da='date'"
+funTitle " "
+funMain
