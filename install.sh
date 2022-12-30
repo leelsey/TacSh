@@ -5,7 +5,7 @@ tacshDirPath="$HOME/.config/tacsh"
 tacshFilePath="$tacshDirPath/tac.sh"
 
 funTitle() {
-    echo -e "$1    ______         ______ \n$1   /_  __/__ _____/ __/ / \n$1    / / / _ \`/ __/\\ \\/ _ \\ \n$1   /_/  \\_,_/\\__/___/_//_/ $tacshVer \n$1\t\t\t by leelsey \n$1"
+    echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ $tacshVer \n$1\t\t\tby leelsey \n"
 }
 
 addFile() {
@@ -15,7 +15,7 @@ addFile() {
 funMain() {
     mkdir -p $tacshDirPath
     touch $tacshFilePath && chmod 600 $tacshFilePath
-    funTitle "#" >> $tacshFilePath
+    funTitle "# " >> $tacshFilePath
 
     if [ "$(uname)" = "Darwin" ]; then 
         icloudPath="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
@@ -40,10 +40,10 @@ funMain() {
     fi
 
     # Funtional command part
-    addFile "\n# TACTICAL COMMAND"
+    addFile "# TACTICAL COMMAND"
 
     # About Shell and Evironments
-    addFile "\n# For Enviroments"
+    addFile "## For Enviroments"
     if [ \$EUID != 0 ]; then
         addFile "  admin () { sudo -i ; } "
     fi
@@ -74,12 +74,12 @@ funMain() {
     addFile "whichos () { echo $(uname) ; }"
     
     # About Default Commands Options & Colourising
-    addFile "\n# For Default Options"
+    addFile "## For Default Options"
     addFile "rm () { command rm -I \"\$@\" ; } "
     addFile "mv () { command mv -i \"\$@\" ; } "
     addFile "cp () { command cp -i \"\$@\" ; } "
     addFile "ln () { command ln -i \"\$@\" ; } "
-    addFile "\n# For Colourising"
+    addFile "## For Colourising"
     addFile "ls () { command ls --color=auto \"\$@\" ; }"
     if [ "$(uname)" = "Linux" ]; then
         addFile "dir () { command dir --color=auto \"\$@\" ; }"
@@ -98,7 +98,7 @@ funMain() {
     addFile "zgrep () { command zgrep --color=auto \"\$@\" ; }"
 
     # About Extended Command
-    addFile "\n# For Extended Command"
+    addFile "## For Extended Command"
     addFile "l () { ls -C \"\$@\" ; }"
     addFile "l. () { ls -Cd .* \"\$@\" ; }"
     addFile "ll () { ls -l \"\$@\" ; }"
@@ -280,7 +280,7 @@ funMain() {
 
 
     # Alias command part
-    addFile "\n\n# ALIAS COMMAND"
+    addFile "\n# ALIAS COMMAND"
     addFile "alias da='date'"
     addFile "alias ca='cal'"
     addFile "alias c='clear'"
@@ -290,7 +290,7 @@ funMain() {
     
     
     # Disabed alias command part
-    addFile "\n\n# OPTIONAL COMMAND"
+    addFile "\n# OPTIONAL COMMAND"
     addFile "#rmdir () { command rmdir -v \"\$@\" ; } "
     addFile "#mkdir () { command mkdir -v \"\$@\" ; } "
     addFile "#chmod () { command chmod --preserve-root \"\$@\" ; }"
@@ -324,5 +324,37 @@ funMain() {
 
 
 # MAIN
-funTitle " "
-funMain
+funTitle ""
+echo -e "- Check your shell type ... \c"
+if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+    echo -e "OK \n- Check your OS type ... \c"
+    if [ "$(uname)" = "Darwin" ] || [ "$(uname)" = "Linux" ]; then
+        echo -e "OK "
+        if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+            profileName=".zprofile"
+        elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+            profileName=".bash_profile"
+        fi
+        if ! [ -f "$tacshFilePath" ]; then
+            echo -e "- Install Alias4sh... \c"
+            funMain
+            echo -e "OK \n- Add on $profileName file ... \c"
+            echo -e "\n# Alias4sh" >> $HOME/$profileName
+            echo -e "source $tacshFilePath\n" >> $HOME/$profileName
+            echo -e "OK \n\nFinish \n • Try \"source ~/$profileName\" or restart Terminal to load the aliases.\n"
+        elif [ -f "$tacshFilePath" ]; then
+            echo -e "- Renstall Alias4sh ... \c"
+            rm -f $tacshFilePath
+            funMain
+            echo -e "OK \n\nFinish"
+            echo -e " • Restart your shell or restart Terminal to load the aliases to your shell's profile."
+            echo -e " • If not work, check \"source ~/.config/a4s/a4s.sh\" code in your shell resoure file (~/$profileName).\n"
+        else
+            echo -e "NO \n • Someting wrong. Please check persmission or file path."
+        fi
+    else
+        echo -e "NO \n • Sorry, this OS isn't support OS. Only supoort macOS and Linux.\n"
+    fi
+else
+    echo -e "NO \n • Sorry, this sehll isn't support. Only support Bash and Zsh."
+fi
