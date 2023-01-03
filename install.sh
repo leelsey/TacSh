@@ -179,6 +179,14 @@ funMain() {
     addFile "dfr () { diff -u \$1 \$2 | diffr --line-numbers ; }"
     addFile "gsdif () { while [[ \$# -gt 0 ]] ; do git show \"\${1}\" | bat -l diff ; shift ; done ; }"
     addFile "gsdfr () { while [[ \$# -gt 0 ]] ; do git show \"\${1}\" | diffr --line-numbers ; shift ; done ; }"
+    if [ "$(uname)" = "Darwin" ]; then
+        addFile "shy () { pbcopy < \"\$1\" ; }"
+        addFile "shp () { pbpaste > \"\$1\" ; }"
+        addFile "pwdp () { pbcopy < \"\$1\" ; }"
+    elif [ "$(uname)" = "Linux" ]; then
+        addFile "shy () { xclip -selection clipboard < \"\$1\" ; }"
+        addFile "shp () { xclip -selection clipboard > \"\$1\" ; }"
+    fi
     addFile "p () {"
     addFile "  if [ \$# -eq 0 ]; then"
     addFile "    cd ..;"
