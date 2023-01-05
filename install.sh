@@ -182,7 +182,7 @@ funMain() {
     if [ "$(uname)" = "Darwin" ]; then
         addFile "shy () { pbcopy < \"\$1\" ; }"
         addFile "shp () { pbpaste > \"\$1\" ; }"
-        addFile "pwdp () { pbcopy < \"\$1\" ; }"
+        addFile "pwdc () { pbcopy < \"\$1\" ; }"
     elif [ "$(uname)" = "Linux" ]; then
         addFile "shy () { xclip -selection clipboard < \"\$1\" ; }"
         addFile "shp () { xclip -selection clipboard > \"\$1\" ; }"
@@ -198,6 +198,8 @@ funMain() {
     addFile "        printf -v cdpFull '%*s' \$1 ;"
     addFile "        cd \"\${cdpFull// /\"../\"}\" ;"
     addFile "      fi"
+    addFile "    elif [[ \$1 =~ '^[y]+$' ]]; then"
+    addFile "      pwd | pbcopy ;"
     addFile "    elif [[ \$1 =~ '^[p]+$' ]]; then"
     addFile "      pwd ;"
     addFile "    elif [[ \$1 =~ '^[b]+$' ]] || [[ \$1 == - ]]; then"
