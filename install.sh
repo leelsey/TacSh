@@ -317,36 +317,7 @@ funMain() {
     addFile "    echo \"dockerun true: Docker is running\""
     addFile "  fi"
     addFile "}"
-
-
-    # Alias command part
-    addFile "\n# ALIAS COMMAND"
-    addFile "alias da='date'"
-    addFile "alias ca='cal'"
-    addFile "alias c='clear'"
-    addFile "alias f='finger'"
-    addFile "alias j='jobs -l'"
-    addFile "alias bc='bc -l'"
-    
-    
-    # Disabed funtional/alias command part
-    addFile "\n# OPTIONAL COMMAND"
-    addFile "#rmdir () { command rmdir -v \"\$@\" ; } "
-    addFile "#mkdir () { command mkdir -v \"\$@\" ; } "
-    addFile "#chmod () { command chmod --preserve-root \"\$@\" ; }"
-    addFile "#chown () { command chown --preserve-root \"\$@\" ; }"
-    addFile "#chgrp () { command chgrp --preserve-root \"\$@\" ; }"
-    addFile "#vi () { command vim \"\$@\" ; }"
-    addFile "#emcs () { emacs \"\$@\" ; }"
-    addFile "#semcs () { sudo emacs \"\$@\" ; }"
-    addFile "#semacs () { sudo emacs \"\$@\" ; }"
-    addFile "#dfh () { df -h \"\$@\" ; }"
-    addFile "#duh () { du -h \"\$@\" ; }"
     if [ "$(uname)" = "Linux" ]; then
-        addFile "#alias vi='vim'             # replace vi -> vim"
-        addFile "#alias top='htop'           # replace top -> htop"
-        addFile "#alias wget='wget -c'       # continue download default"
-        addFile "#alias curl='curl -w \"\\\n\"'  # ignore output % (=warning) when use zsh"
         source /etc/os-release
         if [ "$ID" = "ubuntu" ]; then
             addFile "alias apt='sudo apt'               # for debian-based family"
@@ -364,6 +335,40 @@ funMain() {
             addFile "alias pacman='sudo pacman'         # for arch-based family"
         elif [ "$ID" = "opensuse" ]; then
             addFile "alias zypper='sudo zypper'         # for suse-based family"
+        fi
+        addFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
+    fi
+
+    # Alias command part
+    addFile "\n# ALIAS COMMAND"
+    addFile "alias da='date'"
+    addFile "alias ca='cal'"
+    addFile "alias c='clear'"
+    addFile "alias f='finger'"
+    addFile "alias j='jobs -l'"
+    addFile "alias bc='bc -l'"
+    
+    
+    # Disabed funtional/alias command part
+    if [ "$(uname)" = "Linux" ]; then
+        source /etc/os-release
+        addFile "\n# OPTIONAL COMMAND"
+        if [ "$ID" = "ubuntu" ] || [ "$ID" = "debian" ] || [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ] || [ "$ID" = "arch" ] || [ "$ID" = "opensuse" ]; then
+            addFile "#rmdir () { command rmdir -v \"\$@\" ; } "
+            addFile "#mkdir () { command mkdir -v \"\$@\" ; } "
+            addFile "#chmod () { command chmod --preserve-root \"\$@\" ; }"
+            addFile "#chown () { command chown --preserve-root \"\$@\" ; }"
+            addFile "#chgrp () { command chgrp --preserve-root \"\$@\" ; }"
+            addFile "#vi () { command vim \"\$@\" ; }"
+            addFile "#emcs () { emacs \"\$@\" ; }"
+            addFile "#semcs () { sudo emacs \"\$@\" ; }"
+            addFile "#semacs () { sudo emacs \"\$@\" ; }"
+            addFile "#dfh () { df -h \"\$@\" ; }"
+            addFile "#duh () { du -h \"\$@\" ; }"
+            addFile "#alias vi='vim'             # replace vi -> vim"
+            addFile "#alias top='htop'           # replace top -> htop"
+            addFile "#alias wget='wget -c'       # continue download default"
+            addFile "#alias curl='curl -w \"\\\n\"'  # ignore output % (=warning) when use zsh"
         else
             addFile "#alias apt='sudo apt'              # for debian-based family"
             addFile "#alias apt-get='sudo apt-get'      # legacy of debian-based family"
@@ -375,7 +380,6 @@ funMain() {
             addFile "#alias ufw='sudo ufw'              # firewall management tool: ufw (uncomplicated firewall)"
             addFile "#alias firewall='sudo firewall-cmd'# firewall management tool: firewall"
         fi
-        addFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
     fi
 }
 
