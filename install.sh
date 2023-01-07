@@ -329,7 +329,7 @@ funMain() {
     addFile "alias bc='bc -l'"
     
     
-    # Disabed alias command part
+    # Disabed funtional/alias command part
     addFile "\n# OPTIONAL COMMAND"
     addFile "#rmdir () { command rmdir -v \"\$@\" ; } "
     addFile "#mkdir () { command mkdir -v \"\$@\" ; } "
@@ -342,23 +342,40 @@ funMain() {
     addFile "#semacs () { sudo emacs \"\$@\" ; }"
     addFile "#dfh () { df -h \"\$@\" ; }"
     addFile "#duh () { du -h \"\$@\" ; }"
-    addFile "#alias vi='vim'             # replace vi -> vim"
-    addFile "#alias top='htop'           # replace top -> htop"
-    addFile "#alias wget='wget -c'       # continue download default"
-    addFile "#alias curl='curl -w \"\\\n\"'  # ignore output % (=warning) when use zsh"
     if [ "$(uname)" = "Linux" ]; then
-        addFile "#alias dnf='sudo dnf'          # for redhat-based family"
-        addFile "#alias yum='sudo yum'          # legacy of redhat-based family"
-        addFile "#alias apt='sudo apt'          # for debian-based family"
-        addFile "#alias apt-get='sudo apt-get'  # legacy of debian-based family"
-        addFile "#alias pacman='sudo pacman'    # for arch-based family"
-        addFile "#alias zypper='sudo zypper'    # for suse-based family"
-        addFile "#alias nft='sudo nft'                # firewall management tool: nftables (netfilter table)"
-        addFile "#alias ufw='sudo ufw'                # firewall management tool: ufw (uncomplicated firewall)"
-        addFile "#alias firewall='sudo firewall-cmd'  # firewall management tool: firewall"
-        addFile "#alias iptables='sudo iptables'      # legacy of nefirewall management tool"
-        addFile "#alias reboot='sudo reboot'"
-        addFile "#alias shutdown='sudo shutdown'"
+        addFile "#alias vi='vim'             # replace vi -> vim"
+        addFile "#alias top='htop'           # replace top -> htop"
+        addFile "#alias wget='wget -c'       # continue download default"
+        addFile "#alias curl='curl -w \"\\\n\"'  # ignore output % (=warning) when use zsh"
+        source /etc/os-release
+        if [ "$ID" = "ubuntu" ]; then
+            addFile "alias apt='sudo apt'               # for debian-based family"
+            addFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
+            addFile "alias ufw='sudo ufw'               # firewall management tool: ufw (uncomplicated firewall)"
+        elif [ "$ID" = "debian" ]; then
+            addFile "alias apt='sudo apt'               # for debian-based family"
+            addFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
+            addFile "alias nft='sudo nft'               # firewall management tool: nftables (netfilter table)"
+        elif [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ]; then
+            addFile "alias dnf='sudo dnf'               # for redhat-based family"
+            addFile "alias yum='sudo yum'               # legacy of redhat-based family"
+            addFile "alias firewall='sudo firewall-cmd' # firewall management tool: firewall"
+        elif [ "$ID" = "arch" ]; then
+            addFile "alias pacman='sudo pacman'         # for arch-based family"
+        elif [ "$ID" = "opensuse" ]; then
+            addFile "alias zypper='sudo zypper'         # for suse-based family"
+        else
+            addFile "#alias apt='sudo apt'              # for debian-based family"
+            addFile "#alias apt-get='sudo apt-get'      # legacy of debian-based family"
+            addFile "#alias dnf='sudo dnf'              # for redhat-based family"
+            addFile "#alias yum='sudo yum'              # legacy of redhat-based family"
+            addFile "#alias pacman='sudo pacman'        # for arch-based family"
+            addFile "#alias zypper='sudo zypper'        # for suse-based family"
+            addFile "#alias nft='sudo nft'              # firewall management tool: nftables (netfilter table)"
+            addFile "#alias ufw='sudo ufw'              # firewall management tool: ufw (uncomplicated firewall)"
+            addFile "#alias firewall='sudo firewall-cmd'# firewall management tool: firewall"
+        fi
+        addFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
     fi
 }
 
@@ -376,18 +393,17 @@ if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERS
             profileName=".bash_profile"
         fi
         if ! [ -f "$tacshFilePath" ]; then
-            echo -e "- Install Alias4sh... \c"
+            echo -e "- Install TacSh... \c"
             funMain
             echo -e "OK \n- Add on $profileName file ... \c"
-            echo -e "\n# Alias4sh" >> $HOME/$profileName
-            echo -e "source $tacshFilePath\n" >> $HOME/$profileName
-            echo -e "OK \n\nFinish \n • Try \"source ~/$profileName\" or restart Terminal to load the aliases.\n"
+            echo -e "\n# TacSh\nsource $tacshFilePath\n" >> $HOME/$profileName
+            echo -e "OK \n\nFinish \n • Try \"source ~/$profileName\" or restart Terminal to load the TacSh.\n"
         elif [ -f "$tacshFilePath" ]; then
-            echo -e "- Renstall Alias4sh ... \c"
+            echo -e "- Renstall TacSh ... \c"
             rm -f $tacshFilePath
             funMain
             echo -e "OK \n\nFinish"
-            echo -e " • Restart your shell or restart Terminal to load the aliases to your shell's profile."
+            echo -e " • Restart your shell or restart Terminal to load the TacSh to your shell's profile."
             echo -e " • If not work, check \"source ~/.config/a4s/a4s.sh\" code in your shell resoure file (~/$profileName).\n"
         else
             echo -e "NO \n • Someting wrong. Please check persmission or file path."
