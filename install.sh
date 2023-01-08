@@ -74,14 +74,16 @@ funMain() {
     addFile "whichos () { echo $(uname) ; }"
     
     # About Default Commands Options & Colourising
-    addFile "## For Default Options"
-    addFile "rm () { command rm -I \"\$@\" ; } "
-    addFile "mv () { command mv -i \"\$@\" ; } "
-    addFile "cp () { command cp -i \"\$@\" ; } "
-    addFile "ln () { command ln -i \"\$@\" ; } "
-    addFile "## For Colourising"
-    addFile "ls () { command ls --color=auto \"\$@\" ; }"
-    if [ "$(uname)" = "Linux" ]; then
+    addFile "## For Default Options with Colourising"
+    elif [ "$(uname)" = "Linux" ]; then 
+        addFile "rm () { command rm -iv \"\$@\" ; } "
+        addFile "mv () { command mv -iv \"\$@\" ; } "
+        addFile "cp () { command cp -iv \"\$@\" ; } "
+        addFile "ln () { command ln -iv \"\$@\" ; } "
+    fi
+    if [ "$(uname)" = "Darwin" ]; then
+        addFile "ls () { command ls -G \"\$@\" ; }"
+    elif [ "$(uname)" = "Linux" ]; then
         addFile "dir () { command dir --color=auto \"\$@\" ; }"
         addFile "vdir () { command vdir --color=auto \"\$@\" ; }"
         addFile "ip () { command ip -c \"\$@\" ; }"
@@ -351,8 +353,8 @@ funMain() {
     
     # Disabed funtional/alias command part
     if [ "$(uname)" = "Linux" ]; then
-        source /etc/os-release
         addFile "\n# OPTIONAL COMMAND"
+        source /etc/os-release
         if [ "$ID" = "ubuntu" ] || [ "$ID" = "debian" ] || [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ] || [ "$ID" = "arch" ] || [ "$ID" = "opensuse" ]; then
             addFile "#rmdir () { command rmdir -v \"\$@\" ; } "
             addFile "#mkdir () { command mkdir -v \"\$@\" ; } "
