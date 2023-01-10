@@ -75,7 +75,7 @@ funMain() {
     
     # About Default Commands Options & Colourising
     addFile "## For Default Options with Colourising"
-    elif [ "$(uname)" = "Linux" ]; then 
+    if [ "$(uname)" = "Linux" ]; then 
         addFile "rm () { command rm -iv \"\$@\" ; } "
         addFile "mv () { command mv -iv \"\$@\" ; } "
         addFile "cp () { command cp -iv \"\$@\" ; } "
@@ -84,6 +84,7 @@ funMain() {
     if [ "$(uname)" = "Darwin" ]; then
         addFile "ls () { command ls -G \"\$@\" ; }"
     elif [ "$(uname)" = "Linux" ]; then
+        addFile "ls () { command ls --color=auto \"\$@\" ; }"
         addFile "dir () { command dir --color=auto \"\$@\" ; }"
         addFile "vdir () { command vdir --color=auto \"\$@\" ; }"
         addFile "ip () { command ip -c \"\$@\" ; }"
@@ -102,9 +103,9 @@ funMain() {
     # About Extended Command
     addFile "## For Extended Command"
     addFile "l () { ls -C \"\$@\" ; }"
-    addFile "l. () { ls -Cd .* \"\$@\" ; }"
+    addFile "ld () { ls -Cd .* \"\$@\" ; }"
     addFile "ll () { ls -l \"\$@\" ; }"
-    addFile "ll. () { ls -ld .* \"\$@\" ; }"
+    addFile "lld () { ls -ld .* \"\$@\" ; }"
     addFile "la () { ls -A \"\$@\" ; }"
     addFile "lal () { ls -Al \"\$@\" ; }"
     addFile "lla () { ls -al \"\$@\" ; }"
@@ -399,7 +400,7 @@ if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERS
             profileName=".bash_profile"
         fi
         if ! [ -f "$tacshFilePath" ]; then
-            echo -e "- Install TacSh... \c"
+            echo -e "- Install TacSh ... \c"
             funMain
             echo -e "OK \n- Add on $profileName file ... \c"
             echo -e "\n# TacSh\nsource $tacshFilePath\n" >> $HOME/$profileName
