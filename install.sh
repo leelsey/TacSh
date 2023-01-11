@@ -22,6 +22,23 @@ funMain() {
         dropboxPath="$HOME/Library/CloudStorage/Dropbox"
     elif [ "$(uname)" = "Linux" ]; then
         dropboxPath="$HOME/Dropbox"
+        # Resset Alias
+        source /etc/os-release
+        addFile "unalias grep"
+        addFile "unalias egrep"
+        addFile "unalias fgrep"
+        addFile "unalias xzegrep"
+        addFile "unalias xzfgrep"
+        addFile "unalias xzgrep"
+        addFile "unalias zegrep"
+        addFile "unalias zfgrep"
+        addFile "unalias zgrep"
+        addFile "unalias ls"
+        addFile "unalias ll"
+        if [ "$ID" = "ubuntu" ]; then
+            addFile "unalias l"
+            addFile "unalias la"  
+        fi
     fi
     if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
         shType="zsh"
@@ -83,22 +100,22 @@ funMain() {
     fi
     if [ "$(uname)" = "Darwin" ]; then
         addFile "ls () { command ls -G \"\$@\" ; }"
+        addFile "grep () { command grep --color=auto \"\$@\" ; }"
+        addFile "egrep () { command egrep --color=auto \"\$@\" ; }"
+        addFile "fgrep () { command fgrep --color=auto \"\$@\" ; }"
+        addFile "xzegrep () { command xzegrep --color=auto \"\$@\" ; }"
+        addFile "xzfgrep () { command xzfgrep --color=auto \"\$@\" ; }"
+        addFile "xzgrep () { command xzgrep --color=auto \"\$@\" ; }"
+        addFile "zegrep () { command zegrep --color=auto \"\$@\" ; }"
+        addFile "zfgrep () { command zfgrep --color=auto \"\$@\" ; }"
+        addFile "zgrep () { command zgrep --color=auto \"\$@\" ; }"
     elif [ "$(uname)" = "Linux" ]; then
-        addFile "ls () { command ls --color=auto \"\$@\" ; }"
+        addFile "#ls () { command ls --color=auto \"\$@\" ; }"
         addFile "dir () { command dir --color=auto \"\$@\" ; }"
         addFile "vdir () { command vdir --color=auto \"\$@\" ; }"
         addFile "ip () { command ip -c \"\$@\" ; }"
     fi
     addFile "tree () { command tree -C \"\$@\" ; }"
-    addFile "grep () { command grep --color=auto \"\$@\" ; }"
-    addFile "egrep () { command egrep --color=auto \"\$@\" ; }"
-    addFile "fgrep () { command fgrep --color=auto \"\$@\" ; }"
-    addFile "xzegrep () { command xzegrep --color=auto \"\$@\" ; }"
-    addFile "xzfgrep () { command xzfgrep --color=auto \"\$@\" ; }"
-    addFile "xzgrep () { command xzgrep --color=auto \"\$@\" ; }"
-    addFile "zegrep () { command zegrep --color=auto \"\$@\" ; }"
-    addFile "zfgrep () { command zfgrep --color=auto \"\$@\" ; }"
-    addFile "zgrep () { command zgrep --color=auto \"\$@\" ; }"
 
     # About Extended Command
     addFile "## For Extended Command"
@@ -397,7 +414,7 @@ if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERS
         if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
             profileName=".zprofile"
         elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
-            profileName=".bash_profile"
+            profileName=".bashrc"
         fi
         if ! [ -f "$tacshFilePath" ]; then
             echo -e "- Install TacSh ... \c"
