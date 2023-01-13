@@ -132,7 +132,7 @@ funMain() {
     addFile "cdr () { cd /\"\$@\" ; }"
     addFile "cdh () { cd ~/\"\$@\" ; }"
     addFile "cdl () { cd \"\$@\" | ls -A ; }"
-    addFile "cdla () { cd \"\$@\" | ls -al ; }"
+    addFile "cdd () { cd \"\$@\" | ls -al ; }"
     addFile "his () { history \"\$@\" ; }"
     addFile "cls () { clear ; }"
     if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
