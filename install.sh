@@ -22,23 +22,6 @@ funMain() {
         dropboxPath="$HOME/Library/CloudStorage/Dropbox"
     elif [ "$(uname)" = "Linux" ]; then
         dropboxPath="$HOME/Dropbox"
-        # Resset Alias
-        source /etc/os-release
-        addFile "unalias grep"
-        addFile "unalias egrep"
-        addFile "unalias fgrep"
-        addFile "unalias xzegrep"
-        addFile "unalias xzfgrep"
-        addFile "unalias xzgrep"
-        addFile "unalias zegrep"
-        addFile "unalias zfgrep"
-        addFile "unalias zgrep"
-        addFile "unalias ls"
-        addFile "unalias ll"
-        if [ "$ID" = "ubuntu" ]; then
-            addFile "unalias l"
-            addFile "unalias la"  
-        fi
     fi
     if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
         shType="zsh"
@@ -99,7 +82,6 @@ funMain() {
         addFile "ln () { command ln -iv \"\$@\" ; } "
     fi
     if [ "$(uname)" = "Darwin" ]; then
-        addFile "ls () { command ls -G \"\$@\" ; }"
         addFile "grep () { command grep --color=auto \"\$@\" ; }"
         addFile "egrep () { command egrep --color=auto \"\$@\" ; }"
         addFile "fgrep () { command fgrep --color=auto \"\$@\" ; }"
@@ -109,8 +91,15 @@ funMain() {
         addFile "zegrep () { command zegrep --color=auto \"\$@\" ; }"
         addFile "zfgrep () { command zfgrep --color=auto \"\$@\" ; }"
         addFile "zgrep () { command zgrep --color=auto \"\$@\" ; }"
+        addFile "ls () { command ls -G \"\$@\" ; }"
     elif [ "$(uname)" = "Linux" ]; then
-        addFile "#ls () { command ls --color=auto \"\$@\" ; }"
+        if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+            addFile "grep () { command grep --color=auto \"\$@\" ; }"
+            addFile "ls () { command ls --color=auto \"\$@\" ; }"
+        elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+            addFile "#grep () { command grep --color=auto \"\$@\" ; }"
+            addFile "#ls () { command ls --color=auto \"\$@\" ; }"
+        fi
         addFile "dir () { command dir --color=auto \"\$@\" ; }"
         addFile "vdir () { command vdir --color=auto \"\$@\" ; }"
         addFile "ip () { command ip -c \"\$@\" ; }"
@@ -119,15 +108,34 @@ funMain() {
 
     # About Extended Command
     addFile "## For Extended Command"
-    addFile "l () { ls -C \"\$@\" ; }"
+    if [ "$(uname)" = "Darwin" ]; then
+        addFile "l () { ls -C \"\$@\" ; }"
+        addFile "ll () { ls -l \"\$@\" ; }"
+        addFile "la () { ls -A \"\$@\" ; }"
+    elif [ "$(uname)" = "Linux" ]; then
+        if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+            addFile "l () { ls -C \"\$@\" ; }"
+            addFile "ll () { ls -l \"\$@\" ; }"
+            addFile "la () { ls -A \"\$@\" ; }"
+        elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+            source /etc/os-release
+            if [ "$ID" = "ubuntu" ]; then
+                addFile "#l () { ls -C \"\$@\" ; }"
+                addFile "#ll () { ls -l \"\$@\" ; }"
+                addFile "#la () { ls -A \"\$@\" ; }"
+            else
+                addFile "l () { ls -C \"\$@\" ; }"
+                addFile "#ll () { ls -l \"\$@\" ; }"
+                addFile "la () { ls -A \"\$@\" ; }"
+            fi
+        fi
+    fi
     addFile "ld () { ls -Cd .* \"\$@\" ; }"
-    addFile "ll () { ls -l \"\$@\" ; }"
-    addFile "lld () { ls -ld .* \"\$@\" ; }"
-    addFile "la () { ls -A \"\$@\" ; }"
     addFile "lal () { ls -Al \"\$@\" ; }"
     addFile "lla () { ls -al \"\$@\" ; }"
     addFile "lsf () { ls -F \"\$@\" ; }"
-    addFile "lst () { ls -alh \$@ | grep -v \"^[d|b|c|l|p|s|-]\" \"\$@\" ; }"
+    addFile "lld () { ls -ld .* \"\$@\" ; }"
+    addFile "lsh () { ls -alh \$@ | grep -v \"^[d|b|c|l|p|s|-]\" \"\$@\" ; }"
     addFile "ltr () { ls -lR \"\$@\" ; }"
     addFile "cdr () { cd /\"\$@\" ; }"
     addFile "cdh () { cd ~/\"\$@\" ; }"
