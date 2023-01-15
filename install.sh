@@ -2,7 +2,15 @@
 
 tacshVer="ver 0.1"
 tacshDirPath="$HOME/.config/tacsh"
-tacshFilePath="$tacshDirPath/tac.sh"
+if [ "$(uname)" = "Darwin" ]; then
+    tacshFilePath="$tacshDirPath/tac.sh"
+elif [ "$(uname)" = "Linux" ]; then
+    if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+        tacshFilePath="$tacshDirPath/tac.zsh"
+    elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+        tacshFilePath="$tacshDirPath/tac.bash"
+    fi
+fi
 
 funTitle() {
     echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ $tacshVer \n$1\t\t\tby leelsey \n"
@@ -17,7 +25,7 @@ funMain() {
     touch $tacshFilePath && chmod 600 $tacshFilePath
     funTitle "# " >> $tacshFilePath
 
-    if [ "$(uname)" = "Darwin" ]; then 
+    if [ "$(uname)" = "Darwin" ]; then
         icloudPath="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
         dropboxPath="$HOME/Library/CloudStorage/Dropbox"
     elif [ "$(uname)" = "Linux" ]; then
@@ -419,24 +427,30 @@ if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERS
     echo -e "OK \n- Check your OS type ... \c"
     if [ "$(uname)" = "Darwin" ] || [ "$(uname)" = "Linux" ]; then
         echo -e "OK "
-        if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+        if [ "$(uname)" = "Darwin" ]; then
             profileName=".zprofile"
-        elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
-            profileName=".bashrc"
+        elif [ "$(uname)" = "Linux" ]; then
+            if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+                profileName=".zshrc"
+            elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+                profileName=".bashrc"
+            fi
         fi
+
         if ! [ -f "$tacshFilePath" ]; then
             echo -e "- Install TacSh ... \c"
             funMain
             echo -e "OK \n- Add on $profileName file ... \c"
             echo -e "\n# TacSh\nsource $tacshFilePath\n" >> $HOME/$profileName
-            echo -e "OK \n\nFinish \n • Try \"source ~/$profileName\" or restart Terminal to load the TacSh.\n"
+            echo -e "OK \n\nFinish"
+            echo -e "• Try \"source ~/$profileName\" or restart Terminal to load the TacSh.\n"
         elif [ -f "$tacshFilePath" ]; then
             echo -e "- Renstall TacSh ... \c"
             rm -f $tacshFilePath
             funMain
             echo -e "OK \n\nFinish"
-            echo -e " • Restart your shell or restart Terminal to load the TacSh to your shell's profile."
-            echo -e " • If not work, check \"source ~/.config/a4s/a4s.sh\" code in your shell resoure file (~/$profileName).\n"
+            echo -e " • Restart your shell use \"shrl\" or \"source ~/$profileName\""
+            echo -e " • If not work, check \"source $tacshFilePath\" code in \"$profileName\".\n"
         else
             echo -e "NO \n • Someting wrong. Please check persmission or file path."
         fi
