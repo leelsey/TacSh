@@ -145,10 +145,12 @@ funMain() {
     addFile "lld () { ls -ld .* \"\$@\" ; }"
     addFile "lsh () { ls -alh \$@ | grep -v \"^[d|b|c|l|p|s|-]\" \"\$@\" ; }"
     addFile "ltr () { ls -lR \"\$@\" ; }"
+    addFile "cl () { cd \"\$@\" ; ls ; }"
+    addFile "cla () { cd \"\$@\" ; ls -A ; }"
+    addFile "cll () { cd \"\$@\" ; ls -al ; }"
+    addFile "cdp () { cd \"\$@\" ; pwd ; }"
     addFile "cdr () { cd /\"\$@\" ; }"
     addFile "cdh () { cd ~/\"\$@\" ; }"
-    addFile "cdl () { cd \"\$@\" | ls -A ; }"
-    addFile "cdd () { cd \"\$@\" | ls -al ; }"
     addFile "his () { history \"\$@\" ; }"
     addFile "cls () { clear ; }"
     if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
@@ -436,7 +438,6 @@ if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERS
                 profileName=".bashrc"
             fi
         fi
-
         if ! [ -f "$tacshFilePath" ]; then
             echo -e "- Install TacSh ... \c"
             funMain
