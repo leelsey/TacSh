@@ -73,11 +73,11 @@ funMain() {
     addFile "    echo \"shrl: No environment file found\""
     addFile "  fi"
     addFile "}"
-    addFile "vi$shEnv () { vi $HOME/.$shEnv ; }"
-    addFile "vi$shPf () { vi $HOME/.$shPf ; }"
-    addFile "vi$shRc () { vi $HOME/.$shRc ; }"
-    addFile "vi$shLin () { vi $HOME/.$shLin ; }"
-    addFile "vi$shLout () { vi $HOME/.$shLout ; }"
+    addFile "vienv () { vi $HOME/.$shEnv ; }"
+    addFile "viprofile () { vi $HOME/.$shPf ; }"
+    addFile "virc () { vi $HOME/.$shRc ; }"
+    addFile "vilogin () { vi $HOME/.$shLin ; }"
+    addFile "vilogout () { vi $HOME/.$shLout ; }"
     addFile "vitacsh () { vi $tacshFilePath ; }"
     addFile "whichos () { echo $(uname) ; }"
     
@@ -145,10 +145,10 @@ funMain() {
     addFile "lld () { ls -ld .* \"\$@\" ; }"
     addFile "lsh () { ls -alh \$@ | grep -v \"^[d|b|c|l|p|s|-]\" \"\$@\" ; }"
     addFile "ltr () { ls -lR \"\$@\" ; }"
-    addFile "cl () { cd \"\$@\" ; ls ; }"
-    addFile "cla () { cd \"\$@\" ; ls -A ; }"
-    addFile "cll () { cd \"\$@\" ; ls -al ; }"
-    addFile "cdp () { cd \"\$@\" ; pwd ; }"
+    addFile "cl () { cd \"\$@\" && ls ; }"
+    addFile "cla () { cd \"\$@\" && ls -A ; }"
+    addFile "cll () { cd \"\$@\" && ls -al ; }"
+    addFile "cdp () { cd \"\$@\" && pwd ; }"
     addFile "cdr () { cd /\"\$@\" ; }"
     addFile "cdh () { cd ~/\"\$@\" ; }"
     addFile "his () { history \"\$@\" ; }"
@@ -158,6 +158,7 @@ funMain() {
         addFile "clha () { echo -n > ~/.zsh_history && history -p && rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec $SHELL -l; }"
     elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
         addFile "clh () { history -c  && exec $SHELL -l; }"
+        addFile "clha () { rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec $SHELL -l; }"
     fi
     if [ "$(uname)" = "Darwin" ]; then 
         addFile "clmac () {"
@@ -218,12 +219,13 @@ funMain() {
     addFile "gsdif () { while [[ \$# -gt 0 ]] ; do git show \"\${1}\" | bat -l diff ; shift ; done ; }"
     addFile "gsdfr () { while [[ \$# -gt 0 ]] ; do git show \"\${1}\" | diffr --line-numbers ; shift ; done ; }"
     if [ "$(uname)" = "Darwin" ]; then
-        addFile "shy () { pbcopy < \"\$1\" ; }"
-        addFile "shp () { pbpaste > \"\$1\" ; }"
-        addFile "pwdc () { pbcopy < \"\$1\" ; }"
+        addFile "sy () { pbcopy < \"\$1\" ; }"
+        addFile "sp () { pbpaste > \"\$1\" ; }"
+        addFile "pwdc () { pbcopy < pwd ; }"
     elif [ "$(uname)" = "Linux" ]; then
-        addFile "shy () { xclip -selection clipboard < \"\$1\" ; }"
-        addFile "shp () { xclip -selection clipboard > \"\$1\" ; }"
+        addFile "sy () { xclip -selection clipboard < \"\$1\" ; }"
+        addFile "sp () { xclip -selection clipboard > \"\$1\" ; }"
+        addFile "pwdc () { xclip -selection clipboard < pwd ; }"
     fi
     addFile "p () {"
     addFile "  if [ \$# -eq 0 ]; then"
