@@ -221,11 +221,11 @@ funMain() {
     if [ "$(uname)" = "Darwin" ]; then
         addFile "sy () { pbcopy < \"\$1\" ; }"
         addFile "sp () { pbpaste > \"\$1\" ; }"
-        addFile "pwdc () { pbcopy < pwd ; }"
+        addFile "pwdc () { pwd | pbcopy ; }"
     elif [ "$(uname)" = "Linux" ]; then
         addFile "sy () { xclip -selection clipboard < \"\$1\" ; }"
         addFile "sp () { xclip -selection clipboard > \"\$1\" ; }"
-        addFile "pwdc () { xclip -selection clipboard < pwd ; }"
+        addFile "pwdc () { pwd | xclip -selection clipboard ; }"
     fi
     addFile "p () {"
     addFile "  if [ \$# -eq 0 ]; then"
