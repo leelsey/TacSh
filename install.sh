@@ -357,6 +357,9 @@ funMain() {
     addFile "    echo \"dockerun true: Docker is running\""
     addFile "  fi"
     addFile "}"
+
+    # Alias command part
+    addFile "\n# ALIAS COMMAND"
     if [ "$(uname)" = "Linux" ]; then
         source /etc/os-release
         if [ "$ID" = "ubuntu" ]; then
@@ -378,9 +381,6 @@ funMain() {
         fi
         addFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
     fi
-
-    # Alias command part
-    addFile "\n# ALIAS COMMAND"
     addFile "alias da='date'"
     addFile "alias ca='cal'"
     addFile "alias c='clear'"
