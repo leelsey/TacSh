@@ -78,6 +78,7 @@ Command List
 |cp|Default add "-iv"|Linux|
 |ln|Default add "-iv"|Linux|
 |ls|Colourising|macOS/Linux|
+|gls|Colourising|macOS|
 |grep|Colourising|macOS/Linux|
 |egrep|Colourising|macOS|
 |fgrep|Colourising|macOS|
@@ -87,8 +88,8 @@ Command List
 |zegrep|Colourising|macOS|
 |zfgrep|Colourising|macOS|
 |zgrep|Colourising|macOS|
-|dir|Colourising|Linux|
-|vdir|Colourising|Linux|
+|dir|Colourising with directory first|macOS/Linux|
+|vdir|Colourising with directory first|Linux|
 |ip|Colourising|Linux|
 |tree|Colourising|macOS/Linux|
 
@@ -103,7 +104,7 @@ Command List
 |lla|ls -al|macOS/Linux|
 |lsf|ls -F|macOS/Linux|
 |lld|ls -ld .*|macOS/Linux|
-|lsh|Total files|macOS/Linux|
+|lsv|Total files number|macOS/Linux|
 |ltr|tree through ls|macOS/Linux|
 |cl|cd with ls|macOS/Linux|
 |cla|cd with ls -A|macOS/Linux|
