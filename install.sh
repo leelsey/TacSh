@@ -100,6 +100,8 @@ funMain() {
         addFile "zfgrep () { command zfgrep --color=auto \"\$@\" ; }"
         addFile "zgrep () { command zgrep --color=auto \"\$@\" ; }"
         addFile "ls () { command ls -G \"\$@\" ; }"
+        addFile "gls () { command gls --color=auto \"\$@\" ; }"
+        addFile "dir () { gls -Ao --group-directories-first \"\$@\" ; }"
     elif [ "$(uname)" = "Linux" ]; then
         if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
             addFile "grep () { command grep --color=auto \"\$@\" ; }"
@@ -108,8 +110,8 @@ funMain() {
             addFile "#grep () { command grep --color=auto \"\$@\" ; }"
             addFile "#ls () { command ls --color=auto \"\$@\" ; }"
         fi
-        addFile "dir () { command dir --color=auto \"\$@\" ; }"
-        addFile "vdir () { command vdir --color=auto \"\$@\" ; }"
+        addFile "dir () { command dir -Ao --color=auto --group-directories-first \"\$@\" ; }"
+        addFile "vdir () { command vdir -Ao --color=auto --group-directories-first \"\$@\" ; }"
         addFile "ip () { command ip -c \"\$@\" ; }"
     fi
     addFile "tree () { command tree -C \"\$@\" ; }"
@@ -141,9 +143,10 @@ funMain() {
     addFile "ld () { ls -Cd .* \"\$@\" ; }"
     addFile "lal () { ls -Al \"\$@\" ; }"
     addFile "lla () { ls -al \"\$@\" ; }"
+    addFile "llo () { ls -alO \"\$@\" ; }"
     addFile "lsf () { ls -F \"\$@\" ; }"
     addFile "lld () { ls -ld .* \"\$@\" ; }"
-    addFile "lsh () { ls -alh \$@ | grep -v \"^[d|b|c|l|p|s|-]\" \"\$@\" ; }"
+    addFile "lsv () { ls -alh \$@ | grep -v \"^[d|b|c|l|p|s|-]\" \"\$@\" ; }"
     addFile "ltr () { ls -lR \"\$@\" ; }"
     addFile "cl () { cd \"\$@\" && ls ; }"
     addFile "cla () { cd \"\$@\" && ls -A ; }"
@@ -441,7 +444,7 @@ if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERS
             fi
         fi
         if ! [ -f "$tacshFilePath" ]; then
-            echo -e "- Install TacSh ... \c"
+            echo -e "- Installing TacSh ... \c"
             funMain
             echo -e "OK \n- Add on $profileName file ... \c"
             echo -e "\n# TacSh\nsource $tacshFilePath\n" >> $HOME/$profileName
