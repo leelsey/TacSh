@@ -80,7 +80,7 @@ funMain() {
     addFile "vilogout () { vi $HOME/.$shLout ; }"
     addFile "vitacsh () { vi $tacshFilePath ; }"
     addFile "whichos () { echo $(uname) ; }"
-    
+
     # About Default Commands Options & Colourising
     addFile "## For Default Options with Colourising"
     if [ "$(uname)" = "Linux" ]; then 
@@ -384,14 +384,7 @@ funMain() {
         fi
         addFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
     fi
-    addFile "alias da='date'"
-    addFile "alias ca='cal'"
-    addFile "alias c='clear'"
-    addFile "alias f='finger'"
-    addFile "alias j='jobs -l'"
-    addFile "alias bc='bc -l'"
-    
-    
+
     # Disabed funtional/alias command part
     if [ "$(uname)" = "Linux" ]; then
         addFile "\n# OPTIONAL COMMAND"
@@ -408,10 +401,16 @@ funMain() {
             addFile "#semacs () { sudo emacs \"\$@\" ; }"
             addFile "#dfh () { df -h \"\$@\" ; }"
             addFile "#duh () { du -h \"\$@\" ; }"
-            addFile "#alias vi='vim'             # replace vi -> vim"
-            addFile "#alias top='htop'           # replace top -> htop"
-            addFile "#alias wget='wget -c'       # continue download default"
-            addFile "#alias curl='curl -w \"\\\n\"'  # ignore output % (=warning) when use zsh"
+            addFile "#alias vi='vim'"
+            addFile "#alias top='htop'"
+            addFile "#alias wget='wget -c'"
+            addFile "#alias curl='curl -w \"\\\n\"'"
+            addFile "#alias da='date'"
+            addFile "#alias ca='cal'"
+            addFile "#alias c='clear'"
+            addFile "#alias f='finger'"
+            addFile "#alias j='jobs -l'"
+            addFile "#alias bc='bc -l'"
         else
             addFile "#alias apt='sudo apt'              # for debian-based family"
             addFile "#alias apt-get='sudo apt-get'      # legacy of debian-based family"

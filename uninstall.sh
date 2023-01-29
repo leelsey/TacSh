@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+
 tacshDirPath="$HOME/.config/tacsh"
 echo -e "TacSh uninstaller"
+
 uninstall() {
     if [ -f $2 ]; then
         read -p "Are you sure to remove TacSh? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
@@ -18,6 +20,7 @@ uninstall() {
     fi
     echo -e "OK \n • Finish to uninstall TacSh$4! \n • Please remove manually in ~/$3"
 }
+
 if [ "$(uname)" = "Darwin" ]; then
     tacshFileName="tac.sh"
     tacshFilePath="$tacshDirPath/$tacshFileName"
