@@ -33,8 +33,7 @@ wget -c https://github.com/leelsey/TacSh/releases/download/v0.1/install.sh -O ta
 ```
 #### Use git release
 ```bash
-git clone https://github.com/leelsey/TacSh.git
-cd TacSh
+git clone https://github.com/leelsey/TacSh.git && cd TacSh
 ./install.sh
 ```
 ### 2) Reload shell resource file
@@ -50,6 +49,24 @@ source ~/.zprofile
 ### 3) If you change option, try this
 ```bash
 vitacsh
+```
+### 4) Uninstall TacSh
+#### Use stable release
+```bash
+wget -c https://github.com/leelsey/TacSh/releases/download/v0.1/uninstall.sh -O tacsh-uninstaller
+./tacsh-uninstaller
+# Remove TacSh from shell resource file
+```
+#### Use git release
+```bash
+git clone https://github.com/leelsey/TacSh.git && cd TacSh
+./uninstall.sh
+# Remove TacSh from shell resource file
+```
+#### Manually
+```bash
+rm -rf ~/.config/tacsh
+# Remove TacSh from shell resource file
 ```
 
 ## Usage of TacSh
