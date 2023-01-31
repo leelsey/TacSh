@@ -78,8 +78,18 @@ funMain() {
     addFile "virc () { vi $HOME/.$shRc ; }"
     addFile "vilogin () { vi $HOME/.$shLin ; }"
     addFile "vilogout () { vi $HOME/.$shLout ; }"
-    addFile "vitacsh () { vi $tacshFilePath ; }"
     addFile "whichos () { echo $(uname) ; }"
+    addFile "tacsh () {"
+    addFile "  if [[ \$1 == ver ]] || [[ \$1 == version ]]; then"
+    addFile "    echo $tacshVer ;"
+    addFile "  elif [[ \$1 == ls ]] || [[ \$1 == list ]]; then"
+    addFile "    cat $tacshFilePath ;"
+    addFile "  elif [[ \$1 == conf ]] || [[ \$1 == config ]] || [[ \$1 == configure ]]; then"
+    addFile "    vi $tacshFilePath ;"
+    addFile "  else"
+    addFile "    echo \"try 'tacsh ver' or 'tacsh ls' or 'tacsh conf'\""
+    addFile "  fi"
+    addFile "}"
 
     # About Default Commands Options & Colourising
     addFile "## For Default Options with Colourising"
@@ -232,7 +242,7 @@ funMain() {
     fi
     addFile "p () {"
     addFile "  if [ \$# -eq 0 ]; then"
-    addFile "    cd ..;"
+    addFile "    cd .. ;"
     addFile "  elif [ \$# -eq 1 ]; then"
     addFile "    if [[ \$1 =~ '^[0-9]+$' ]]; then"
     addFile "      if [[ \$1 == 0 ]]; then"
