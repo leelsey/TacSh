@@ -28,7 +28,7 @@ funMain() {
     if [ "$(uname)" = "Darwin" ]; then
         icloudPath="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
         dropboxPath="$HOME/Library/CloudStorage/Dropbox"
-    elif [ "$(uname)" = "Linux" ]; then
+    elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         dropboxPath="$HOME/Dropbox"
     fi
     if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
@@ -93,7 +93,7 @@ funMain() {
 
     # About Default Commands Options & Colourising
     addFile "## For Default Options with Colourising"
-    if [ "$(uname)" = "Linux" ]; then 
+    if [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then 
         addFile "rm () { command rm -iv \"\$@\" ; } "
         addFile "mv () { command mv -iv \"\$@\" ; } "
         addFile "cp () { command cp -iv \"\$@\" ; } "
@@ -112,7 +112,7 @@ funMain() {
         addFile "ls () { command ls -G \"\$@\" ; }"
         addFile "gls () { command gls --color=auto \"\$@\" ; }"
         addFile "dir () { gls -Ao --group-directories-first \"\$@\" ; }"
-    elif [ "$(uname)" = "Linux" ]; then
+    elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
             addFile "grep () { command grep --color=auto \"\$@\" ; }"
             addFile "ls () { command ls --color=auto \"\$@\" ; }"
@@ -122,6 +122,8 @@ funMain() {
         fi
         addFile "dir () { command dir -Ao --color=auto --group-directories-first \"\$@\" ; }"
         addFile "vdir () { command vdir -Ao --color=auto --group-directories-first \"\$@\" ; }"
+    fi
+    if [ "$(uname)" = "Linux" ]; then
         addFile "ip () { command ip -c \"\$@\" ; }"
     fi
     addFile "tree () { command tree -C \"\$@\" ; }"
@@ -132,7 +134,7 @@ funMain() {
         addFile "l () { ls -C \"\$@\" ; }"
         addFile "ll () { ls -l \"\$@\" ; }"
         addFile "la () { ls -A \"\$@\" ; }"
-    elif [ "$(uname)" = "Linux" ]; then
+    elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
             addFile "l () { ls -C \"\$@\" ; }"
             addFile "ll () { ls -l \"\$@\" ; }"
@@ -201,7 +203,6 @@ funMain() {
     addFile "pingt () { ping -a -c 10 \"\$@\" ; }"
     if [ "$(uname)" = "Darwin" ]; then
         addFile "pinga () { ping -a --apple-connect --apple-time \"\$@\" ; }"
-        addFile "ip () { command ipconfig \"\$@\" ;  }"
         addFile "macslp () {"
         addFile "  if [ \"\$#\" -eq 1 ]; then"
         addFile "    if [[ \$1 =~ on ]]; then"
@@ -221,11 +222,14 @@ funMain() {
         addFile "  Dropbox () { cd '$dropboxPath' ;}"
         addFile "  dropbox () { cd '$dropboxPath' ;}" 
         addFile "fi"
-    elif [ "$(uname)" = "Linux" ]; then
+    elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         addFile "if [ -d $dropboxPath ]; then"
         addFile "  Dropbox () { cd '$dropboxPath' ;}"
         addFile "  dropbox () { cd '$dropboxPath' ;}" 
         addFile "fi"
+    fi
+    if [ "$(uname)" = "Darwin" ] || [[ "$(uname)" =~ "MINGW64" ]];; then
+        addFile "ip () { command ipconfig \"\$@\" ;  }" 
     fi
     addFile "dif () { diff \$1 \$2 | bat -l diff ; }"
     addFile "dfr () { diff -u \$1 \$2 | diffr --line-numbers ; }"
@@ -284,7 +288,7 @@ funMain() {
     if [ "$(uname)" = "Darwin" ]; then
         addFile "   elif [[ \$1 == ic ]] || [[ \$1 == icl ]] || [[ \$1 == iCl ]] || [[ \$1 == cl ]] || [[ \$1 == clo ]] || [[ \$1 == Clo ]] ; then"
         addFile "      cd '$iCloudPath' ;"
-    elif [ "$(uname)" = "Linux" ]; then
+    elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         addFile "    elif [[ \$1 == vd ]] || [[ \$1 == vid ]] || [[ \$1 == Vid ]]; then"
         addFile "      cd ~/Videos ;"
     fi
@@ -315,7 +319,7 @@ funMain() {
     addFile "      echo \"p pc, pic: change direcotry to pictures directory\""
     if [ "$(uname)" = "Darwin" ]; then
         addFile "      echo \"p ic, cl, icl, clo: change direcotry to icloud directory\""    
-    elif [ "$(uname)" = "Linux" ]; then
+    elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         addFile "      echo \"p vd, vid: change direcotry to videos directory\""
     fi
     addFile "      echo \"p dr, dro, drp: change direcotry to dropbox directory\""
@@ -441,7 +445,7 @@ funTitle ""
 echo -e "- Check your shell type ... \c"
 if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
     echo -e "OK \n- Check your OS type ... \c"
-    if [ "$(uname)" = "Darwin" ] || [ "$(uname)" = "Linux" ]; then
+    if [ "$(uname)" = "Darwin" ] || [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         echo -e "OK "
         if [ "$(uname)" = "Darwin" ]; then
             profileName=".zprofile"
@@ -451,6 +455,8 @@ if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ] || [ -n "`$SHELL -c 'echo $BASH_VERS
             elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
                 profileName=".bashrc"
             fi
+        elif [[ "$(uname)" =~ "MINGW64" ]]; then
+            profileName=".bashrc"
         fi
         if ! [ -f "$tacshFilePath" ]; then
             echo -e "- Installing TacSh ... \c"
