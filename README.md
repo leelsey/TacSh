@@ -15,12 +15,19 @@
 ## Support Operating System
 - macOS
 - Linux
-### Tesed Linux
-- Ubuntu
-- Debian
-- Fedora
-- CentOS
-- Arch
+- Windows (MinGW)
+
+## Tesed Environment
+|OS|Shell|
+|---|---|
+|macOS|Zsh|
+|Ubuntu|Bash/Zsh|
+|Debian|Bash/Zsh|
+|Fedora|Bash/Zsh|
+|CentOS|Bash/Zsh|
+|RHEL|Bash/Zsh|
+|Arch|Bash/Zsh|
+|Windows|Bash(MinGW)|
 
 ## How to install TacSh
 ### 1) Install TacSh
