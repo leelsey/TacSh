@@ -26,7 +26,7 @@ funMain() {
     funTitle "# " >> $tacshFilePath
 
     if [ "$(uname)" = "Darwin" ]; then
-        icloudPath="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+        iCloudPath="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
         dropboxPath="$HOME/Library/CloudStorage/Dropbox"
     elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         dropboxPath="$HOME/Dropbox"
@@ -228,7 +228,7 @@ funMain() {
         addFile "  dropbox () { cd '$dropboxPath' ;}" 
         addFile "fi"
     fi
-    if [ "$(uname)" = "Darwin" ] || [[ "$(uname)" =~ "MINGW64" ]];; then
+    if [ "$(uname)" = "Darwin" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         addFile "ip () { command ipconfig \"\$@\" ;  }" 
     fi
     addFile "dif () { diff \$1 \$2 | bat -l diff ; }"
@@ -293,9 +293,9 @@ funMain() {
         addFile "      cd ~/Videos ;"
     fi
     addFile "    elif [[ \$1 == dr ]] || [[ \$1 == dro ]] || [[ \$1 == Dro ]] || [[ \$1 == drp ]] || [[ \$1 == Drp ]] ; then"
-    addFile "      if [ -d $macDropboxPath ]; then"
-    addFile "        cd '$macDropboxPath' ;"
-    addFile "      elsle"
+    addFile "      if [ -d $dropboxPath ]; then"
+    addFile "        cd '$dropboxPath' ;"
+    addFile "      else"
     addFile "        echo \"p: wrong usage, try p -h\" ;"
     addFile "      fi"
     addFile "    elif [[ \$1 == --help ]] || [[ \$1 == -help ]] || [[ \$1 == -h ]]; then"
@@ -342,7 +342,14 @@ funMain() {
     addFile "    echo \"javahome: wrong usage\""
     addFile "  fi"
     addFile "}"
-    if [ "$(uname)" = "Darwin" ]; then 
+    addFile "dockerun () {"
+    addFile "  if ! docker info > /dev/null 2>&1; then"
+    addFile "    echo \"dockerun false: Docker isn't running\""
+    addFile "  else"
+    addFile "    echo \"dockerun true: Docker is running\""
+    addFile "  fi"
+    addFile "}"
+    if [ "$(uname)" = "Darwin" ]; then
         addFile "chicn () {"
         addFile "  if [ \$# -eq 2 ]; then"
         addFile "    if [[ \"\$1\" =~ ^https?:// ]]; then"
@@ -367,36 +374,29 @@ funMain() {
         addFile " fi"
         addFile "}"
     fi
-    addFile "dockerun () {"
-    addFile "  if ! docker info > /dev/null 2>&1; then"
-    addFile "    echo \"dockerun false: Docker isn't running\""
-    addFile "  else"
-    addFile "    echo \"dockerun true: Docker is running\""
-    addFile "  fi"
-    addFile "}"
 
     # Alias command part
-    addFile "\n# ALIAS COMMAND"
     if [ "$(uname)" = "Linux" ]; then
+        addFile "\n# ALIAS COMMAND"
+        addFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
         source /etc/os-release
         if [ "$ID" = "ubuntu" ]; then
-            addFile "alias apt='sudo apt'               # for debian-based family"
-            addFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
             addFile "alias ufw='sudo ufw'               # firewall management tool: ufw (uncomplicated firewall)"
-        elif [ "$ID" = "debian" ]; then
             addFile "alias apt='sudo apt'               # for debian-based family"
             addFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
+        elif [ "$ID" = "debian" ]; then
             addFile "alias nft='sudo nft'               # firewall management tool: nftables (netfilter table)"
+            addFile "alias apt='sudo apt'               # for debian-based family"
+            addFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
         elif [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ]; then
+            addFile "alias firewall='sudo firewall-cmd' # firewall management tool: firewall"
             addFile "alias dnf='sudo dnf'               # for redhat-based family"
             addFile "alias yum='sudo yum'               # legacy of redhat-based family"
-            addFile "alias firewall='sudo firewall-cmd' # firewall management tool: firewall"
         elif [ "$ID" = "arch" ]; then
             addFile "alias pacman='sudo pacman'         # for arch-based family"
         elif [ "$ID" = "opensuse" ]; then
             addFile "alias zypper='sudo zypper'         # for suse-based family"
         fi
-        addFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
     fi
 
     # Disabed funtional/alias command part
@@ -426,15 +426,15 @@ funMain() {
             addFile "#alias j='jobs -l'"
             addFile "#alias bc='bc -l'"
         else
+            addFile "#alias nft='sudo nft'              # firewall management tool: nftables (netfilter table)"
+            addFile "#alias ufw='sudo ufw'              # firewall management tool: ufw (uncomplicated firewall)"
+            addFile "#alias firewall='sudo firewall-cmd'# firewall management tool: firewall"
             addFile "#alias apt='sudo apt'              # for debian-based family"
             addFile "#alias apt-get='sudo apt-get'      # legacy of debian-based family"
             addFile "#alias dnf='sudo dnf'              # for redhat-based family"
             addFile "#alias yum='sudo yum'              # legacy of redhat-based family"
             addFile "#alias pacman='sudo pacman'        # for arch-based family"
             addFile "#alias zypper='sudo zypper'        # for suse-based family"
-            addFile "#alias nft='sudo nft'              # firewall management tool: nftables (netfilter table)"
-            addFile "#alias ufw='sudo ufw'              # firewall management tool: ufw (uncomplicated firewall)"
-            addFile "#alias firewall='sudo firewall-cmd'# firewall management tool: firewall"
         fi
     fi
 }
