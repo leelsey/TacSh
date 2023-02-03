@@ -216,15 +216,12 @@ funMain() {
         addFile "    echo \"usage: macslp on/off \" ;"
         addFile "  fi"
         addFile "}"
-        addFile "iCloud () { cd '$iCloudPath' ;}"
         addFile "icloud () { cd '$iCloudPath' ;}"
         addFile "if [ -d $dropboxPath ]; then"
-        addFile "  Dropbox () { cd '$dropboxPath' ;}"
         addFile "  dropbox () { cd '$dropboxPath' ;}" 
         addFile "fi"
     elif [ "$(uname)" = "Linux" ] || [[ "$(uname)" =~ "MINGW64" ]]; then
         addFile "if [ -d $dropboxPath ]; then"
-        addFile "  Dropbox () { cd '$dropboxPath' ;}"
         addFile "  dropbox () { cd '$dropboxPath' ;}" 
         addFile "fi"
     fi
