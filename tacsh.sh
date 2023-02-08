@@ -9,32 +9,32 @@ funcTitle() {
 }
 funcTitle ""
 
-read -p "- Build Env (1: macOS, 2: Linux, 3: Windows):" osCode
+read -p "- Build Env (1: macOS, 2: Linux, 3: Windows): " osCode
 if [ $osCode = 1 ]; then
     osName="Darwin"
     shName="zsh"
     taschGenFilePath="$tacshGenDirPath/tac.sh"
-    tacshFilePath="$tacshDirPath/tac.sh"
-    iCloudPath="\$HOME/Library/Mobile Documents/com~apple~CloudDocs"
-    dropboxPath="\$HOME/Library/CloudStorage/Dropbox"
+    tacshFilePath="\"$tacshDirPath/tac.sh\""
+    iCloudPath="\"\$HOME/Library/Mobile Documents/com~apple~CloudDocs\""
+    dropboxPath="\"\$HOME/Library/CloudStorage/Dropbox\""
 elif [ $osCode = 2 ]; then
     osName="Linux"
     read -p shCode "Shell (1: zsh, 2: bash):"
     if [ $shCode = 1 ]; then
         shName="zsh"
         taschGenFilePath="$tacshGenDirPath/tac.zsh"
-        tacshFilePath="$tacshDirPath/tac.zsh"
+        tacshFilePath="\"$tacshDirPath/tac.zsh\""
     elif [ $shCode = 2 ]; then
         shName="bash"
         taschGenFilePath="$tacshGenDirPath/tac.bash"
         tacshFilePath="$tacshDirPath/tac.bash"
     fi
-    dropboxPath="\$HOME/Dropbox"
+    dropboxPath="\"\$HOME/Dropbox\""
 elif [ $osCode = 3 ]; then
     osName="MINGW64"
     shName="bash"
     taschGenFilePath="$tacshGenDirPath/tac.bash"
-    tacshFilePath="$tacshDirPath/tac.bash"
+    tacshFilePath="\"$tacshDirPath/tac.bash\""
 else
     echo "Choose 1, 2 or 3."
     exit 1
@@ -81,11 +81,11 @@ funcGen() {
     funcAddFile "\ttacshVer=\"0.1\""
     funcAddFile "\ttacshPath=\"\$HOME/.config/tacsh/tac.sh\""
     funcAddFile "\tif [[ \$1 == ver ]] || [[ \$1 == version ]]; then"
-    funcAddFile "\t\techo $tacshVer ;"
+    funcAddFile "\t\techo \"ver \$tacshVer\" ;"
     funcAddFile "\telif [[ \$1 == ls ]] || [[ \$1 == list ]]; then"
-    funcAddFile "\t\tcat $tacshFilePath ;"
+    funcAddFile "\t\tcat \"\$tacshPath\" ;"
     funcAddFile "\telif [[ \$1 == conf ]] || [[ \$1 == config ]] || [[ \$1 == configure ]]; then"
-    funcAddFile "\t\tvi $tacshFilePath ;"
+    funcAddFile "\t\tvi \"\$tacshPath\" ;"
     funcAddFile "\telse"
     funcAddFile "\t\techo \"try 'tacsh ver' or 'tacsh ls' or 'tacsh conf'\""
     funcAddFile "\tfi"
@@ -96,30 +96,30 @@ funcGen() {
     if [ \$EUID != 0 ]; then
         funcAddFile "admin () { sudo -i ; } "
     fi
-    funcAddFile "shrl () { echo \"reloaded shell\" && exec -l $SHELL ; }"
+    funcAddFile "shrl () { echo \"reloaded shell\" && exec -l \$SHELL ; }"
     if [ $osName = "Darwin" ]; then
         funcAddFile "macrl () { killall SystemUIServer ; killall Dock ; killall Finder ; echo \"reloaded macOS GUI\"}"
     fi
     funcAddFile "rlsh () {"
-    funcAddFile "\tif [ -f \$HOME/.$shPf ] || [ -f \$HOME/.$shRc ]; then"
-    funcAddFile "\t\tsource \$HOME/.$shPf && source \$HOME/.$shRc ;"
+    funcAddFile "\tif [ -f \"\$HOME/.$shPf\" ] || [ -f \"\$HOME/.$shRc\" ]; then"
+    funcAddFile "\t\tsource \"\$HOME/.$shPf\" && source \"\$HOME/.$shRc\" ;"
     funcAddFile "\t\techo \"reloaded .$shPf and .$shRc\" ;"
-    funcAddFile "\telif [ -f \$HOME/.$shRc ]; then"
-    funcAddFile "\t\tcommand source \$HOME/.$shRc ;"
+    funcAddFile "\telif [ -f \"\$HOME/.$shRc\" ]; then"
+    funcAddFile "\t\tcommand source \"\$HOME/.$shRc\" ;"
     funcAddFile "\t\techo \"reloaded .$shRc\" ;"
-    funcAddFile "\telif [ -f \$HOME/$shPf ]; then"
-    funcAddFile "\t\tcommand source \$HOME/.$shPf ;"
+    funcAddFile "\telif [ -f \"\$HOME/$shPf\" ]; then"
+    funcAddFile "\t\tcommand source \"\$HOME/.$shPf\" ;"
     funcAddFile "\t\techo \"reloaded .$shPf\" ;"
     funcAddFile "\telse"
     funcAddFile "\t\techo \"shrl: No environment file found\""
     funcAddFile "\tfi"
     funcAddFile "}"
-    funcAddFile "vienv () { vi \$HOME/.$shEnv ; }"
-    funcAddFile "viprofile () { vi \$HOME/.$shPf ; }"
-    funcAddFile "virc () { vi \$HOME/.$shRc ; }"
-    funcAddFile "vilogin () { vi \$HOME/.$shLin ; }"
-    funcAddFile "vilogout () { vi \$HOME/.$shLout ; }"
-    funcAddFile "whichos () { echo $(uname) ; }"
+    funcAddFile "vienv () { vi \"\$HOME/.$shEnv\" ; }"
+    funcAddFile "viprofile () { vi \"\$HOME/.$shPf\" ; }"
+    funcAddFile "virc () { vi \"\$HOME/.$shRc\" ; }"
+    funcAddFile "vilogin () { vi \"\$HOME/.$shLin\" ; }"
+    funcAddFile "vilogout () { vi \"\$HOME/.$shLout\" ; }"
+    funcAddFile "whichos () { echo \$(uname) ; }"
 
     # About Default Commands Options & Colourising
     funcAddFile "\n# ABOUT DEFAULT OPTIONS WITH COLOURISING"
@@ -236,13 +236,13 @@ funcGen() {
         funcAddFile "\t\techo \"usage: macslp on/off \" ;"
         funcAddFile "\tfi"
         funcAddFile "}"
-        funcAddFile "icloud () { cd '$iCloudPath' ; ls -A ; }"
-        funcAddFile "if [ -d '$dropboxPath' ]; then"
-        funcAddFile "\tdropbox () { cd '$dropboxPath' ; ls -A ; }"
+        funcAddFile "icloud () { cd $iCloudPath ; ls -A ; }"
+        funcAddFile "if [ -d $dropboxPath ]; then"
+        funcAddFile "\tdropbox () { cd $dropboxPath ; ls -A ; }"
         funcAddFile "fi"
     elif [ $osName = "Linux" ] || [[ $osName =~ "MINGW64" ]]; then
-        funcAddFile "if [ -d '$dropboxPath' ]; then"
-        funcAddFile "\tdropbox () { cd '$dropboxPath' ; ls -A ; }"
+        funcAddFile "if [ -d $dropboxPath ]; then"
+        funcAddFile "\tdropbox () { cd $dropboxPath ; ls -A ; }"
         funcAddFile "fi"
     fi
     if [ $osName = "Darwin" ] || [[ $osName =~ "MINGW64" ]]; then
