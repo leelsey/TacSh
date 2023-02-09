@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-tacshVer="ver 0.1"
+tacshVer="0.1"
 tacshGenDirPath="./src"
 tacshDirPath="\$HOME/.config/tacsh"
 
 funcTitle() {
-    echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ $tacshVer \n$1\t\t\tby leelsey \n"
+    echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $tacshVer \n$1                        by leelsey \n"
 }
 funcTitle ""
-
 
 if [[ $1 = 1 ]]; then
     osCode=1
@@ -80,7 +79,7 @@ fi
 
 echo "- Selected Enironment: $osName($shName)"
 
-funNewFile() {
+funcNewFile() {
     mkdir -p $tacshGenDirPath
     touch $taschGenFilePath && chmod 600 $taschGenFilePath
     funcTitle "# " >> $taschGenFilePath
@@ -94,7 +93,7 @@ funcGen() {
     if [ -f $taschGenFilePath ]; then
         rm -rf $taschGenFilePath
     fi
-    funNewFile
+    funcNewFile
 
     # Funtional command part
     funcAddFile "# TACTICAL COMMAND"
@@ -102,7 +101,7 @@ funcGen() {
     # About TacSh
     funcAddFile "\n# ABOUT TACSH"
     funcAddFile "tacsh () {"
-    funcAddFile "\ttacshVer=\"0.1\""
+    funcAddFile "\ttacshVer=\"$tacshVer\""
     funcAddFile "\ttacshPath=\"\$HOME/.config/tacsh/tac.sh\""
     funcAddFile "\tif [[ \$1 == ver ]] || [[ \$1 == version ]]; then"
     funcAddFile "\t\techo \"ver \$tacshVer\" ;"
