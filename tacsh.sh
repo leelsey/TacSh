@@ -9,7 +9,24 @@ funcTitle() {
 }
 funcTitle ""
 
-read -p "- Build Env (1: macOS, 2: Linux, 3: Windows): " osCode
+
+if [[ $1 = 1 ]]; then
+    osCode=1
+elif [[ $1 = 2 ]]; then
+    osCode=2
+    if [[ $2 = 1 ]]; then
+        shCode=1
+    elif [[ $2 = 2 ]]; then
+        shCode=2
+    else
+        read -p "- Build shell env (1: zsh, 2: bash): " shCode
+    fi
+elif [[ $1 = 3 ]]; then
+    osCode=3
+else
+    read -p "- Build OS env (1: macOS, 2: Linux, 3: Windows): " osCode
+fi
+
 if [ $osCode = 1 ]; then
     osName="Darwin"
     shName="zsh"
@@ -19,7 +36,9 @@ if [ $osCode = 1 ]; then
     dropboxPath="\"\$HOME/Library/CloudStorage/Dropbox\""
 elif [ $osCode = 2 ]; then
     osName="Linux"
-    read -p shCode "Shell (1: zsh, 2: bash):"
+    if [ -z $shCode ]; then
+        read -p "- Build shell env (1: zsh, 2: bash): " shCode
+    fi
     if [ $shCode = 1 ]; then
         shName="zsh"
         taschGenFilePath="$tacshGenDirPath/tac.zsh"
@@ -28,6 +47,9 @@ elif [ $osCode = 2 ]; then
         shName="bash"
         taschGenFilePath="$tacshGenDirPath/tac.bash"
         tacshFilePath="$tacshDirPath/tac.bash"
+    else 
+        echo " • Only choose 1(zsh) or 2(bash)"
+        exit 1
     fi
     dropboxPath="\"\$HOME/Dropbox\""
 elif [ $osCode = 3 ]; then
@@ -36,7 +58,7 @@ elif [ $osCode = 3 ]; then
     taschGenFilePath="$tacshGenDirPath/tac.bash"
     tacshFilePath="\"$tacshDirPath/tac.bash\""
 else
-    echo "Choose 1, 2 or 3."
+    echo " • Only choose 1(macOS), 2(Linux) or 3(Windows)"
     exit 1
 fi
 
@@ -55,6 +77,8 @@ elif [ $shName = "bash" ]; then
     shLin="bash_login"
     shLout="bash_logout"
 fi
+
+echo "- Selected Enironment: $osName($shName)"
 
 funNewFile() {
     mkdir -p $tacshGenDirPath
@@ -457,6 +481,5 @@ funcGen() {
 }
 
 
-echo "- Generating tacsh file"
 funcGen
-echo " • Finish, check the file in ./src/tacsh.sh"
+echo "- Generated tacsh file: $taschGenFilePath"
