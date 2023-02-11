@@ -27,24 +27,26 @@ else
 fi
 
 if [ $osCode = 1 ]; then
-    osName="Darwin"
+    keName="Darwin"
+    osName="macOS"
     shName="zsh"
-    taschGenFilePath="$tacshGenDirPath/tac.sh"
+    taschGenFilePath="$tacshGenDirPath/$osName/tac.sh"
     tacshFilePath="\"$tacshDirPath/tac.sh\""
     iCloudPath="\"\$HOME/Library/Mobile Documents/com~apple~CloudDocs\""
     dropboxPath="\"\$HOME/Library/CloudStorage/Dropbox\""
 elif [ $osCode = 2 ]; then
-    osName="Linux"
+    keName="Linux"
+    osName=$keName
     if [ -z $shCode ]; then
         read -p "- Build shell env (1: zsh, 2: bash): " shCode
     fi
     if [ $shCode = 1 ]; then
         shName="zsh"
-        taschGenFilePath="$tacshGenDirPath/tac.zsh"
+        taschGenFilePath="$tacshGenDirPath/Linux/tac.zsh"
         tacshFilePath="\"$tacshDirPath/tac.zsh\""
     elif [ $shCode = 2 ]; then
         shName="bash"
-        taschGenFilePath="$tacshGenDirPath/tac.bash"
+        taschGenFilePath="$tacshGenDirPath/Windows/tac.sh"
         tacshFilePath="$tacshDirPath/tac.bash"
     else 
         echo " • Only choose 1(zsh) or 2(bash)"
@@ -52,7 +54,8 @@ elif [ $osCode = 2 ]; then
     fi
     dropboxPath="\"\$HOME/Dropbox\""
 elif [ $osCode = 3 ]; then
-    osName="MINGW64"
+    keName="MINGW64"
+    osName="Windows"
     shName="bash"
     taschGenFilePath="$tacshGenDirPath/tac.bash"
     tacshFilePath="\"$tacshDirPath/tac.bash\""
@@ -77,10 +80,10 @@ elif [ $shName = "bash" ]; then
     shLout="bash_logout"
 fi
 
-echo "- Selected Enironment: $osName($shName)"
+echo "- Selected Enironment: $osName($keName) & $shName"
 
 funcNewFile() {
-    mkdir -p $tacshGenDirPath
+    mkdir -p $tacshGenDirPath/$osName
     touch $taschGenFilePath && chmod 600 $taschGenFilePath
     funcTitle "# " >> $taschGenFilePath
 }
@@ -120,7 +123,7 @@ funcGen() {
         funcAddFile "admin () { sudo -i ; } "
     fi
     funcAddFile "shrl () { echo \"reloaded shell\" && exec -l \$SHELL ; }"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "macrl () { killall SystemUIServer ; killall Dock ; killall Finder ; echo \"reloaded macOS GUI\"}"
     fi
     funcAddFile "rlsh () {"
@@ -146,13 +149,13 @@ funcGen() {
 
     # About Default Commands Options & Colourising
     funcAddFile "\n# ABOUT DEFAULT OPTIONS WITH COLOURISING"
-    if [ $osName = "Linux" ] || [[ $osName =~ "MINGW64" ]]; then 
+    if [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then 
         funcAddFile "rm () { command rm -iv \"\$@\" ; } "
         funcAddFile "mv () { command mv -iv \"\$@\" ; } "
         funcAddFile "cp () { command cp -iv \"\$@\" ; } "
         funcAddFile "ln () { command ln -iv \"\$@\" ; } "
     fi
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "grep () { command grep --color=auto \"\$@\" ; }"
         funcAddFile "egrep () { command egrep --color=auto \"\$@\" ; }"
         funcAddFile "fgrep () { command fgrep --color=auto \"\$@\" ; }"
@@ -165,7 +168,7 @@ funcGen() {
         funcAddFile "ls () { command ls -G \"\$@\" ; }"
         funcAddFile "gls () { command gls --color=auto \"\$@\" ; }"
         funcAddFile "dir () { gls -Ao --group-directories-first \"\$@\" ; }"
-    elif [ $osName = "Linux" ] || [[ $osName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
         if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
             funcAddFile "grep () { command grep --color=auto \"\$@\" ; }"
             funcAddFile "ls () { command ls --color=auto \"\$@\" ; }"
@@ -176,18 +179,18 @@ funcGen() {
         funcAddFile "dir () { command dir -Ao --color=auto --group-directories-first \"\$@\" ; }"
         funcAddFile "vdir () { command vdir -Ao --color=auto --group-directories-first \"\$@\" ; }"
     fi
-    if [ $osName = "Linux" ]; then
+    if [ $keName = "Linux" ]; then
         funcAddFile "ip () { command ip -c \"\$@\" ; }"
     fi
     funcAddFile "tree () { command tree -C \"\$@\" ; }"
 
     # About Extended Command
     funcAddFile "\n# ABOUT EXTENDED COMMAND"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "l () { ls -C \"\$@\" ; }"
         funcAddFile "ll () { ls -l \"\$@\" ; }"
         funcAddFile "la () { ls -A \"\$@\" ; }"
-    elif [ $osName = "Linux" ] || [[ $osName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
         if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
             funcAddFile "l () { ls -C \"\$@\" ; }"
             funcAddFile "ll () { ls -l \"\$@\" ; }"
@@ -228,7 +231,7 @@ funcGen() {
         funcAddFile "clh () { history -c  && exec $SHELL -l; }"
         funcAddFile "clha () { rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec $SHELL -l; }"
     fi
-    if [ $osName = "Darwin" ]; then 
+    if [ $keName = "Darwin" ]; then 
         funcAddFile "clmac () { defaults delete com.apple.dock ; defaults write com.apple.dock ResetLaunchPad -bool true ; killall Dock ; echo \"reseted dock and launchpad\" ; }"
         funcAddFile "cldock () { defaults delete com.apple.dock ; killall Dock ; echo \"reseted dock\" ; }"
         funcAddFile "cllaunchpad () { defaults write com.apple.dock ResetLaunchPad -bool true ; killall Dock ; echo \"reseted launchpad\" ; }"
@@ -244,7 +247,7 @@ funcGen() {
     funcAddFile "snvim () { sudo nvim \"\$@\" ; }"
     funcAddFile "pings () { ping -a \"\$@\" ; }"
     funcAddFile "pingt () { ping -a -c 10 \"\$@\" ; }"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "pinga () { ping -a --apple-connect --apple-time \"\$@\" ; }"
         funcAddFile "macslp () {"
         funcAddFile "\tif [ \"\$#\" -eq 1 ]; then"
@@ -263,23 +266,23 @@ funcGen() {
         funcAddFile "if [ -d $dropboxPath ]; then"
         funcAddFile "\tdropbox () { cd $dropboxPath ; ls -A ; }"
         funcAddFile "fi"
-    elif [ $osName = "Linux" ] || [[ $osName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
         funcAddFile "if [ -d $dropboxPath ]; then"
         funcAddFile "\tdropbox () { cd $dropboxPath ; ls -A ; }"
         funcAddFile "fi"
     fi
-    if [ $osName = "Darwin" ] || [[ $osName =~ "MINGW64" ]]; then
+    if [ $keName = "Darwin" ] || [[ $keName =~ "MINGW64" ]]; then
         funcAddFile "ip () { command ipconfig \"\$@\" ;  }" 
     fi
     funcAddFile "dif () { diff \$1 \$2 | bat -l diff ; }"
     funcAddFile "dfr () { diff -u \$1 \$2 | diffr --line-numbers ; }"
     funcAddFile "gsdif () { while [[ \$# -gt 0 ]] ; do git show \"\${1}\" | bat -l diff ; shift ; done ; }"
     funcAddFile "gsdfr () { while [[ \$# -gt 0 ]] ; do git show \"\${1}\" | diffr --line-numbers ; shift ; done ; }"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "sy () { pbcopy < \"\$1\" ; }"
         funcAddFile "sp () { pbpaste > \"\$1\" ; }"
         funcAddFile "pwdc () { pwd | pbcopy ; }"
-    elif [ $osName = "Linux" ]; then
+    elif [ $keName = "Linux" ]; then
         funcAddFile "sy () { xclip -selection clipboard < \"\$1\" ; }"
         funcAddFile "sp () { xclip -selection clipboard > \"\$1\" ; }"
         funcAddFile "pwdc () { pwd | xclip -selection clipboard ; }"
@@ -305,7 +308,7 @@ funcGen() {
     funcAddFile "\t\t\tcd / ;"
     funcAddFile "\t\telif [[ \$1 =~ '^[h]+$' ]] || [[ \$1 == ~ ]]; then"
     funcAddFile "\t\t\tcd ~ ;"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "\t\telif [[ \$1 == ap ]] || [[ \$1 == app ]] || [[ \$1 == App ]]; then"
         funcAddFile "\t\t\tcd /Applications ;"
     fi
@@ -315,7 +318,7 @@ funcGen() {
     funcAddFile "\t\t\tcd ~/Documents ;"
     funcAddFile "\t\telif [[ \$1 == dw ]] || [[ \$1 == dow ]] || [[ \$1 == Dow ]]; then"
     funcAddFile "\t\t\tcd ~/Downloads ;"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "\t\telif [[ \$1 == lb ]] || [[ \$1 == lib ]] || [[ \$1 == Lib ]]; then"
         funcAddFile "\t\t\tcd ~/Library ;"
         funcAddFile "\t\telif [[ \$1 == mv ]] || [[ \$1 == mov ]] || [[ \$1 == Mov ]]; then"
@@ -325,10 +328,10 @@ funcGen() {
     funcAddFile "\t\t\tcd ~/Music ;"
     funcAddFile "\t\telif [[ \$1 == pc ]] || [[ \$1 == pic ]] || [[ \$1 == Pic ]]; then"
     funcAddFile "\t\t\tcd ~/Pictures ;"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "\t elif [[ \$1 == ic ]] || [[ \$1 == icl ]] || [[ \$1 == iCl ]] || [[ \$1 == cl ]] || [[ \$1 == clo ]] || [[ \$1 == Clo ]] ; then"
         funcAddFile "\t\t\tcd '$iCloudPath' ;"
-    elif [ $osName = "Linux" ] || [[ $osName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
         funcAddFile "\t\telif [[ \$1 == vd ]] || [[ \$1 == vid ]] || [[ \$1 == Vid ]]; then"
         funcAddFile "\t\t\tcd ~/Videos ;"
     fi
@@ -345,21 +348,21 @@ funcGen() {
     funcAddFile "\t\t\techo \"p b(-): change direcotry to previous directory\""
     funcAddFile "\t\t\techo \"p r(/): change direcotry to root directory\""
     funcAddFile "\t\t\techo \"p h(~): change direcotry to home directory\""
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "\t\t\techo \"p ap, app: change direcotry to applications directory\""
     fi
     funcAddFile "\t\t\techo \"p ds, des: change direcotry to desktop directory\""
     funcAddFile "\t\t\techo \"p dc, doc: change direcotry to documents directory\""
     funcAddFile "\t\t\techo \"p dw, dow: change direcotry to downloads directory\""
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "\t\t\techo \"p lb, lib: change direcotry to movies directory\""
         funcAddFile "\t\t\techo \"p mv, mov: change direcotry to movies directory\""
     fi
     funcAddFile "\t\t\techo \"p ms, mus: change direcotry to music directory\""
     funcAddFile "\t\t\techo \"p pc, pic: change direcotry to pictures directory\""
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "\t\t\techo \"p ic, cl, icl, clo: change direcotry to icloud directory\""
-    elif [ $osName = "Linux" ] || [[ $osName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
         funcAddFile "\t\t\techo \"p vd, vid: change direcotry to videos directory\""
     fi
     funcAddFile "\t\t\techo \"p dr, dro, drp: change direcotry to dropbox directory\""
@@ -389,7 +392,7 @@ funcGen() {
     funcAddFile "\t\techo \"dockerun true: Docker is running\""
     funcAddFile "\tfi"
     funcAddFile "}"
-    if [ $osName = "Darwin" ]; then
+    if [ $keName = "Darwin" ]; then
         funcAddFile "chicn () {"
         funcAddFile "\tif [ \$# -eq 2 ]; then"
         funcAddFile "\t\tif [[ \"\$1\" =~ ^https?:// ]]; then"
@@ -416,7 +419,7 @@ funcGen() {
     fi
 
     # Alias command part
-    if [ $osName = "Linux" ]; then
+    if [ $keName = "Linux" ]; then
         funcAddFile "\n# ALIAS COMMAND"
         funcAddFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
         source /etc/os-release
@@ -440,7 +443,7 @@ funcGen() {
     fi
 
     # Disabed funtional/alias command part
-    if [ $osName = "Linux" ]; then
+    if [ $keName = "Linux" ]; then
         funcAddFile "\n# OPTIONAL COMMAND"
         source /etc/os-release
         if [ "$ID" = "ubuntu" ] || [ "$ID" = "debian" ] || [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ] || [ "$ID" = "arch" ] || [ "$ID" = "opensuse" ]; then
