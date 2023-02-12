@@ -42,11 +42,11 @@ elif [ $osCode = 2 ]; then
     fi
     if [ $shCode = 1 ]; then
         shName="zsh"
-        taschGenFilePath="$tacshGenDirPath/Linux/tac.zsh"
+        taschGenFilePath="$tacshGenDirPath/$osName/tac.zsh"
         tacshFilePath="\"$tacshDirPath/tac.zsh\""
     elif [ $shCode = 2 ]; then
         shName="bash"
-        taschGenFilePath="$tacshGenDirPath/Windows/tac.sh"
+        taschGenFilePath="$tacshGenDirPath/$osName/tac.bash"
         tacshFilePath="$tacshDirPath/tac.bash"
     else 
         echo " • Only choose 1(zsh) or 2(bash)"
@@ -57,7 +57,7 @@ elif [ $osCode = 3 ]; then
     keName="MINGW64"
     osName="Windows"
     shName="bash"
-    taschGenFilePath="$tacshGenDirPath/tac.bash"
+    taschGenFilePath="$tacshGenDirPath/$osName/tac.sh"
     tacshFilePath="\"$tacshDirPath/tac.bash\""
 else
     echo " • Only choose 1(macOS), 2(Linux) or 3(Windows)"
@@ -169,10 +169,10 @@ funcGen() {
         funcAddFile "gls () { command gls --color=auto \"\$@\" ; }"
         funcAddFile "dir () { gls -Ao --group-directories-first \"\$@\" ; }"
     elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
-        if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+        if [ $shName = "zsh" ]; then
             funcAddFile "grep () { command grep --color=auto \"\$@\" ; }"
             funcAddFile "ls () { command ls --color=auto \"\$@\" ; }"
-        elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+        elif [ $shName = "bash" ]; then
             funcAddFile "#grep () { command grep --color=auto \"\$@\" ; }"
             funcAddFile "#ls () { command ls --color=auto \"\$@\" ; }"
         fi
@@ -191,21 +191,14 @@ funcGen() {
         funcAddFile "ll () { ls -l \"\$@\" ; }"
         funcAddFile "la () { ls -A \"\$@\" ; }"
     elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
-        if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+        if [ $shName = "zsh" ]; then
             funcAddFile "l () { ls -C \"\$@\" ; }"
             funcAddFile "ll () { ls -l \"\$@\" ; }"
             funcAddFile "la () { ls -A \"\$@\" ; }"
-        elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
-            source /etc/os-release
-            if [ "$ID" = "ubuntu" ]; then
-                funcAddFile "#l () { ls -C \"\$@\" ; }"
-                funcAddFile "#ll () { ls -l \"\$@\" ; }"
-                funcAddFile "#la () { ls -A \"\$@\" ; }"
-            else
-                funcAddFile "l () { ls -C \"\$@\" ; }"
-                funcAddFile "#ll () { ls -l \"\$@\" ; }"
-                funcAddFile "la () { ls -A \"\$@\" ; }"
-            fi
+        elif [ $shName = "bash" ]; then
+            funcAddFile "#l () { ls -C \"\$@\" ; }"
+            funcAddFile "#ll () { ls -l \"\$@\" ; }"
+            funcAddFile "#la () { ls -A \"\$@\" ; }"
         fi
     fi
     funcAddFile "ld () { ls -Cd .* \"\$@\" ; }"
@@ -224,12 +217,12 @@ funcGen() {
     funcAddFile "cdh () { cd ~/\"\$@\" ; }"
     funcAddFile "his () { history \"\$@\" ; }"
     funcAddFile "cls () { clear ; }"
-    if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
-        funcAddFile "clh () { echo -n > ~/.zsh_history && history -p  && exec $SHELL -l; }"
-        funcAddFile "clha () { echo -n > ~/.zsh_history && history -p && rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec $SHELL -l; }"
-    elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
-        funcAddFile "clh () { history -c  && exec $SHELL -l; }"
-        funcAddFile "clha () { rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec $SHELL -l; }"
+    if [ $shName = "zsh" ]; then
+        funcAddFile "clh () { echo -n > ~/.zsh_history && history -p  && exec \$SHELL -l; }"
+        funcAddFile "clha () { echo -n > ~/.zsh_history && history -p && rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec \$SHELL -l; }"
+    elif [ $shName = "bash" ]; then
+        funcAddFile "clh () { history -c  && exec \$SHELL -l; }"
+        funcAddFile "clha () { rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec \$SHELL -l; }"
     fi
     if [ $keName = "Darwin" ]; then 
         funcAddFile "clmac () { defaults delete com.apple.dock ; defaults write com.apple.dock ResetLaunchPad -bool true ; killall Dock ; echo \"reseted dock and launchpad\" ; }"
@@ -422,31 +415,31 @@ funcGen() {
     if [ $keName = "Linux" ]; then
         funcAddFile "\n# ALIAS COMMAND"
         funcAddFile "alias iptables='sudo iptables'    # legacy of nefirewall management tool"
-        source /etc/os-release
-        if [ "$ID" = "ubuntu" ]; then
-            funcAddFile "alias ufw='sudo ufw'               # firewall management tool: ufw (uncomplicated firewall)"
-            funcAddFile "alias apt='sudo apt'               # for debian-based family"
-            funcAddFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
-        elif [ "$ID" = "debian" ]; then
-            funcAddFile "alias nft='sudo nft'               # firewall management tool: nftables (netfilter table)"
-            funcAddFile "alias apt='sudo apt'               # for debian-based family"
-            funcAddFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
-        elif [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ]; then
-            funcAddFile "alias firewall='sudo firewall-cmd' # firewall management tool: firewall"
-            funcAddFile "alias dnf='sudo dnf'               # for redhat-based family"
-            funcAddFile "alias yum='sudo yum'               # legacy of redhat-based family"
-        elif [ "$ID" = "arch" ]; then
-            funcAddFile "alias pacman='sudo pacman'         # for arch-based family"
-        elif [ "$ID" = "opensuse" ]; then
-            funcAddFile "alias zypper='sudo zypper'         # for suse-based family"
-        fi
+        # source /etc/os-release
+        # if [ "$ID" = "ubuntu" ]; then
+        #     funcAddFile "alias ufw='sudo ufw'               # firewall management tool: ufw (uncomplicated firewall)"
+        #     funcAddFile "alias apt='sudo apt'               # for debian-based family"
+        #     funcAddFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
+        # elif [ "$ID" = "debian" ]; then
+        #     funcAddFile "alias nft='sudo nft'               # firewall management tool: nftables (netfilter table)"
+        #     funcAddFile "alias apt='sudo apt'               # for debian-based family"
+        #     funcAddFile "alias apt-get='sudo apt-get'       # legacy of debian-based family"
+        # elif [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ]; then
+        #     funcAddFile "alias firewall='sudo firewall-cmd' # firewall management tool: firewall"
+        #     funcAddFile "alias dnf='sudo dnf'               # for redhat-based family"
+        #     funcAddFile "alias yum='sudo yum'               # legacy of redhat-based family"
+        # elif [ "$ID" = "arch" ]; then
+        #     funcAddFile "alias pacman='sudo pacman'         # for arch-based family"
+        # elif [ "$ID" = "opensuse" ]; then
+        #     funcAddFile "alias zypper='sudo zypper'         # for suse-based family"
+        # fi
     fi
 
     # Disabed funtional/alias command part
     if [ $keName = "Linux" ]; then
         funcAddFile "\n# OPTIONAL COMMAND"
-        source /etc/os-release
-        if [ "$ID" = "ubuntu" ] || [ "$ID" = "debian" ] || [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ] || [ "$ID" = "arch" ] || [ "$ID" = "opensuse" ]; then
+        # source /etc/os-release
+        # if [ "$ID" = "ubuntu" ] || [ "$ID" = "debian" ] || [ "$ID" = "fedora" ] || [ "$ID" = "centos" ] || [ "$ID" = "rhel" ] || [ "$ID" = "arch" ] || [ "$ID" = "opensuse" ]; then
             funcAddFile "#rmdir () { command rmdir -v \"\$@\" ; } "
             funcAddFile "#mkdir () { command mkdir -v \"\$@\" ; } "
             funcAddFile "#chmod () { command chmod --preserve-root \"\$@\" ; }"
@@ -468,7 +461,7 @@ funcGen() {
             funcAddFile "#alias f='finger'"
             funcAddFile "#alias j='jobs -l'"
             funcAddFile "#alias bc='bc -l'"
-        else
+        # else
             funcAddFile "#alias nft='sudo nft'              # firewall management tool: nftables (netfilter table)"
             funcAddFile "#alias ufw='sudo ufw'              # firewall management tool: ufw (uncomplicated firewall)"
             funcAddFile "#alias firewall='sudo firewall-cmd'# firewall management tool: firewall"
@@ -478,10 +471,9 @@ funcGen() {
             funcAddFile "#alias yum='sudo yum'              # legacy of redhat-based family"
             funcAddFile "#alias pacman='sudo pacman'        # for arch-based family"
             funcAddFile "#alias zypper='sudo zypper'        # for suse-based family"
-        fi
+        # fi
     fi
 }
-
 
 funcGen
 echo "- Generated tacsh file: $taschGenFilePath"
