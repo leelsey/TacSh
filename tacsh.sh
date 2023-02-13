@@ -3,100 +3,16 @@
 tacshVer="0.1"
 tacshGenDirPath="./src"
 tacshDirPath="\$HOME/.config/tacsh"
+msgReadme="Read the README.md for build options."
 
-funcTitle() {
-    echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $tacshVer \n$1                        by leelsey \n"
-}
-funcTitle ""
-
-if [[ $1 = 1 ]]; then
-    osCode=1
-elif [[ $1 = 2 ]]; then
-    osCode=2
-    if [[ $2 = 1 ]]; then
-        shCode=1
-    elif [[ $2 = 2 ]]; then
-        shCode=2
-    else
-        read -p "- Build shell env (1: zsh, 2: bash): " shCode
-    fi
-elif [[ $1 = 3 ]]; then
-    osCode=3
-else
-    read -p "- Build OS env (1: macOS, 2: Linux, 3: Windows): " osCode
-fi
-
-if [ $osCode = 1 ]; then
-    keName="Darwin"
-    osName="macOS"
-    shName="zsh"
-    taschGenFilePath="$tacshGenDirPath/$osName/tac.sh"
-    tacshFilePath="\"$tacshDirPath/tac.sh\""
-    iCloudPath="\"\$HOME/Library/Mobile Documents/com~apple~CloudDocs\""
-    dropboxPath="\"\$HOME/Library/CloudStorage/Dropbox\""
-elif [ $osCode = 2 ]; then
-    keName="Linux"
-    osName=$keName
-    if [ -z $shCode ]; then
-        read -p "- Build shell env (1: zsh, 2: bash): " shCode
-    fi
-    if [ $shCode = 1 ]; then
-        shName="zsh"
-        taschGenFilePath="$tacshGenDirPath/$osName/tac.zsh"
-        tacshFilePath="\"$tacshDirPath/tac.zsh\""
-    elif [ $shCode = 2 ]; then
-        shName="bash"
-        taschGenFilePath="$tacshGenDirPath/$osName/tac.bash"
-        tacshFilePath="$tacshDirPath/tac.bash"
-    else 
-        echo " • Only choose 1(zsh) or 2(bash)"
-        exit 1
-    fi
-    dropboxPath="\"\$HOME/Dropbox\""
-elif [ $osCode = 3 ]; then
-    keName="MINGW64"
-    osName="Windows"
-    shName="bash"
-    taschGenFilePath="$tacshGenDirPath/$osName/tac.sh"
-    tacshFilePath="\"$tacshDirPath/tac.bash\""
-else
-    echo " • Only choose 1(macOS), 2(Linux) or 3(Windows)"
-    exit 1
-fi
-
-if [ $shName = "zsh" ]; then
-    shType="zsh"
-    shEnv="zshenv"
-    shPf="zprofile"
-    shRc="zshrc"
-    shLin="zlogin"
-    shLout="zlogout"
-elif [ $shName = "bash" ]; then
-    shType="bash"
-    shEnv="bash_env"
-    shPf="bash_profile"
-    shRc="bashrc"
-    shLin="bash_login"
-    shLout="bash_logout"
-fi
-
-echo "- Selected Enironment: $osName($keName) & $shName"
-
-funcNewFile() {
-    mkdir -p $tacshGenDirPath/$osName
-    touch $taschGenFilePath && chmod 600 $taschGenFilePath
-    funcTitle "# " >> $taschGenFilePath
-}
-
-funcAddFile() {
-    echo -e $1 >> $taschGenFilePath
-}
-
+funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $tacshVer \n$1                        by leelsey \n" ; }
+funcRmFile() { if [ -f $taschGenFilePath ] ; then rm -rf $taschGenFilePath ; fi ; }
+funcMkFile() { mkdir -p $taschGenDirPath ; touch $taschGenFilePath && chmod 600 $taschGenFilePath ; funcTitle "# " >> $taschGenFilePath ; }
+funcAddFile() { echo -e $1 >> $taschGenFilePath ; }
+funcWrong() { echo " • Wrong usage. Please try again." ; exit 1 ; }
 funcGen() {
-    if [ -f $taschGenFilePath ]; then
-        rm -rf $taschGenFilePath
-    fi
-    funcNewFile
+    funcRmFile
+    funcMkFile
 
     # Funtional command part
     funcAddFile "# TACTICAL COMMAND"
@@ -149,7 +65,7 @@ funcGen() {
 
     # About Default Commands Options & Colourising
     funcAddFile "\n# ABOUT DEFAULT OPTIONS WITH COLOURISING"
-    if [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then 
+    if [ $keName = "Linux" ] || [[ $keName = "MinGW64" ]]; then 
         funcAddFile "rm () { command rm -iv \"\$@\" ; } "
         funcAddFile "mv () { command mv -iv \"\$@\" ; } "
         funcAddFile "cp () { command cp -iv \"\$@\" ; } "
@@ -168,7 +84,7 @@ funcGen() {
         funcAddFile "ls () { command ls -G \"\$@\" ; }"
         funcAddFile "gls () { command gls --color=auto \"\$@\" ; }"
         funcAddFile "dir () { gls -Ao --group-directories-first \"\$@\" ; }"
-    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName = "MinGW64" ]]; then
         if [ $shName = "zsh" ]; then
             funcAddFile "grep () { command grep --color=auto \"\$@\" ; }"
             funcAddFile "ls () { command ls --color=auto \"\$@\" ; }"
@@ -190,7 +106,7 @@ funcGen() {
         funcAddFile "l () { ls -C \"\$@\" ; }"
         funcAddFile "ll () { ls -l \"\$@\" ; }"
         funcAddFile "la () { ls -A \"\$@\" ; }"
-    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName = "MinGW64" ]]; then
         if [ $shName = "zsh" ]; then
             funcAddFile "l () { ls -C \"\$@\" ; }"
             funcAddFile "ll () { ls -l \"\$@\" ; }"
@@ -259,12 +175,12 @@ funcGen() {
         funcAddFile "if [ -d $dropboxPath ]; then"
         funcAddFile "\tdropbox () { cd $dropboxPath ; ls -A ; }"
         funcAddFile "fi"
-    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName = "MinGW64" ]]; then
         funcAddFile "if [ -d $dropboxPath ]; then"
         funcAddFile "\tdropbox () { cd $dropboxPath ; ls -A ; }"
         funcAddFile "fi"
     fi
-    if [ $keName = "Darwin" ] || [[ $keName =~ "MINGW64" ]]; then
+    if [ $keName = "Darwin" ] || [[ $keName = "MinGW64" ]]; then
         funcAddFile "ip () { command ipconfig \"\$@\" ;  }" 
     fi
     funcAddFile "dif () { diff \$1 \$2 | bat -l diff ; }"
@@ -324,7 +240,7 @@ funcGen() {
     if [ $keName = "Darwin" ]; then
         funcAddFile "\t elif [[ \$1 == ic ]] || [[ \$1 == icl ]] || [[ \$1 == iCl ]] || [[ \$1 == cl ]] || [[ \$1 == clo ]] || [[ \$1 == Clo ]] ; then"
         funcAddFile "\t\t\tcd '$iCloudPath' ;"
-    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName = "MinGW64" ]]; then
         funcAddFile "\t\telif [[ \$1 == vd ]] || [[ \$1 == vid ]] || [[ \$1 == Vid ]]; then"
         funcAddFile "\t\t\tcd ~/Videos ;"
     fi
@@ -355,7 +271,7 @@ funcGen() {
     funcAddFile "\t\t\techo \"p pc, pic: change direcotry to pictures directory\""
     if [ $keName = "Darwin" ]; then
         funcAddFile "\t\t\techo \"p ic, cl, icl, clo: change direcotry to icloud directory\""
-    elif [ $keName = "Linux" ] || [[ $keName =~ "MINGW64" ]]; then
+    elif [ $keName = "Linux" ] || [[ $keName = "MinGW64" ]]; then
         funcAddFile "\t\t\techo \"p vd, vid: change direcotry to videos directory\""
     fi
     funcAddFile "\t\t\techo \"p dr, dro, drp: change direcotry to dropbox directory\""
@@ -474,6 +390,133 @@ funcGen() {
         # fi
     fi
 }
+
+
+# MAIN
+funcTitle ""
+
+if [[ $1 = 1 ]]; then
+    osCode=1
+elif [[ $1 = 2 ]]; then
+    osCode=2
+    if [[ $2 = 1 ]]; then
+        luCode=1
+    elif [[ $2 = 2 ]]; then
+        luCode=2
+    elif [[ $2 = 3 ]]; then
+        luCode=3
+    elif [[ $2 = 4 ]]; then
+        luCode=4
+    elif [[ $2 = 5 ]]; then
+        luCode=5
+    elif [[ $2 = 6 ]]; then
+        luCode=6
+    elif [[ $2 = 7 ]]; then
+        luCode=7
+    elif [[ $2 = 8 ]]; then
+        luCode=8
+    elif [[ $2 = 9 ]]; then
+        luCode=9
+    else
+        echo "$msgReadme"
+        read -p "- Build Linux type: " luCode
+    fi
+    if [[ $3 = 1 ]]; then
+        shCode=1
+    elif [[ $3 = 2 ]]; then
+        shCode=2
+    else
+        echo "$msgReadme"
+        read -p "- Build shell type: " shCode
+    fi
+elif [[ $1 = 3 ]]; then
+    osCode=3
+else
+    echo "$msgReadme"
+    read -p "- Build OS type: " osCode
+fi
+
+if [ $osCode = 1 ]; then
+    keName="Darwin"
+    osName="macOS"
+    shName="zsh"
+    taschGenDirPath="$tacshGenDirPath/$osName"
+    taschGenFilePath="$taschGenDirPath/tac.sh"
+    tacshFilePath="\"$tacshDirPath/tac.sh\""
+    iCloudPath="\"\$HOME/Library/Mobile Documents/com~apple~CloudDocs\""
+    dropboxPath="\"\$HOME/Library/CloudStorage/Dropbox\""
+elif [ $osCode = 2 ]; then
+    keName="Linux"
+    if [ -z $luCode ]; then
+        read -p "- Build Linux type: " luCode
+    fi
+    if [ -z $shCode ]; then
+        read -p "- Build shell type: " shCode
+    fi
+    if [ $luCode = 1 ]; then
+        osName="Ubuntu"
+    elif [ $luCode = 2 ]; then
+        osName="Debain"
+    elif [ $luCode = 3 ]; then
+        osName="Fedora"
+    elif [ $luCode = 4 ]; then
+        osName="CentOS"
+    elif [ $luCode = 5 ]; then
+        osName="REHL"
+    elif [ $luCode = 7 ]; then
+        osName="Arch"
+    elif [ $luCode = 8 ]; then
+        osName="Kali"
+    elif [ $luCode = 9 ]; then
+        osName="Other Linux"
+    else
+        funcWrong
+    fi
+    if [ $luCode = 9 ]; then
+        taschGenDirPath="$tacshGenDirPath/Linux"
+    else
+        taschGenDirPath="$tacshGenDirPath/Linux/$osName"
+    fi
+    if [ $shCode = 1 ]; then
+        shName="zsh"
+        taschGenFilePath="$taschGenDirPath/tac.zsh"
+        tacshFilePath="\"$tacshDirPath/tac.zsh\""
+    elif [ $shCode = 2 ]; then
+        shName="bash"
+        taschGenFilePath="$taschGenDirPath/tac.bash"
+        tacshFilePath="$tacshDirPath/tac.bash"
+    else 
+        funcWrong
+    fi
+    dropboxPath="\"\$HOME/Dropbox\""
+elif [ $osCode = 3 ]; then
+    keName="MINGW64"
+    osName="Windows"
+    shName="bash"
+    taschGenDirPath="$tacshGenDirPath/$osName"
+    taschGenFilePath="$taschGenDirPath/tac.sh"
+    tacshFilePath="\"$tacshDirPath/tac.bash\""
+else
+    funcWrong
+fi
+
+if [ $shName = "zsh" ]; then
+    shType="zsh"
+    shEnv="zshenv"
+    shPf="zprofile"
+    shRc="zshrc"
+    shLin="zlogin"
+    shLout="zlogout"
+elif [ $shName = "bash" ]; then
+    shType="bash"
+    shEnv="bash_env"
+    shPf="bash_profile"
+    shRc="bashrc"
+    shLin="bash_login"
+    shLout="bash_logout"
+fi
+
+echo "- Selected Enironment: $osName($keName) & $shName"
 
 funcGen
 echo "- Generated tacsh file: $taschGenFilePath"
