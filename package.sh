@@ -1,0 +1,5 @@
+name="TacSh"
+version="0.1"
+description="Tactical Command for Shell"
+author="leelsey"
+license="MIT"
