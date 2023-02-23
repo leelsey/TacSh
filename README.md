@@ -1,38 +1,33 @@
 # TacSh
-
 ### Tactical Shell Command
 
 ## Support Shell
 - Bash
 - ZSH
-### Will be supported
-- Csh
-- Ksh
-- Dash
-- Fish
-- Tcsh
 
 ## Support Operating System
 - macOS
 - Linux
-- Windows (MinGW)
+- Windows(MinGW)
 
-## Tesed Environment
-|OS|Shell|
-|---|---|
-|macOS|Zsh|
-|Ubuntu|Bash/Zsh|
-|Debian|Bash/Zsh|
-|Fedora|Bash/Zsh|
-|CentOS|Bash/Zsh|
-|RHEL|Bash/Zsh|
-|Arch|Bash/Zsh|
-|Windows|Bash(MinGW)|
+## Support Environment Table
+|OS|Zsh|Bash|
+|---|---|---|
+|macOS|YES|NO|
+|Ubuntu|YES|YES|
+|Debian|YES|YES|
+|Fedora|YES|YES|
+|CentOS|YES|YES|
+|RHEL|YES|YES|
+|SUSE|YES|YES|
+|Arch|YES|YES|
+|Kali|YES|YES|
+|Windows|NO|YES|
+Also, support other Linux distribution and Unix-like OS.
 
 ## How to install TacSh
 ### 1) Install TacSh
-Download and install TacSh.
-Before install, you should have bash.
+Download and install TacSh. Before install, you should have bash.
 #### Use stable release
 ```bash
 wget -c https://github.com/leelsey/TacSh/releases/download/v0.1/install.sh -O tacsh-installer
@@ -77,7 +72,12 @@ rm -rf ~/.config/tacsh
 ```
 
 ## Usage of TacSh
-Command List
+#### Command List
+
+### About TacSh Control
+|Command|Usage|OS|
+|---|---|---|
+|tacsh|TacSh Control|macOS/Linux|
 
 ### About Shell and Evironments
 |Command|Usage|OS|
@@ -93,6 +93,27 @@ Command List
 |vilogout|Edit shell's logout file|macOS/Linux|
 |vitacsh|Edit TacSh configure file|macOS/Linux|
 |whichos|Output OS name|macOS/Linux|
+
+### About Firewall
+|Command|Usage|OS|
+|---|---|---|
+|firewall|Default add sudo|Linux|
+|ufw|Default add sudo|Linux|
+|nft|Default add sudo|Linux|
+|iptables|Default add sudo|Linux|
+
+### About Package Manager
+|Command|Usage|OS|
+|---|---|---|
+|dpkg|Default add sudo|Linux|
+|apt|Default add sudo|Linux|
+|apt-get|Default add sudo|Linux|
+|rpm|Default add sudo|Linux|
+|dnf|Default add sudo|Linux|
+|yum|Default add sudo|Linux|
+|zypper|Default add sudo|Linux|
+|pacman|Default add sudo|Linux|
+|emerge|Default add sudo|Linux|
 
 ### About Default Commands Options & Colourising
 |Command|Usage|OS|
@@ -168,23 +189,17 @@ Command List
 |p|Pass command|macOS/Linux|
 |jctl|Java control|macOS/Linux|
 |dockerun|Docker run check|macOS/Linux|
+|chicn|Change icon|macOS|
 
-### Alias command
-|Command|Usage|
-|---|---|
-|apt|sudo apt|Linux|
-|apt-get|sudo apt-get|Linux|
-|dnf|sudo dnf|Linux|
-|yum|sudo yum|Linux|
-|pacman|sudo pacman|Linux|
-|zypper|sudo zypper|Linux|
-|ufw|sudo ufw|Linux|
-|nft|sudo nft|Linux|
-|firewall-cmd|sudo firewall-cmd|Linux|
-|iptables|sudo iptables|Linux|
-|da|date|
-|ca|cal|
-|c|clear|
-|f|finger|
-|j|job -l|
-|bc| bc -l|
+### About user command
+|Command|Usage|OS|
+|---|---|---|
+|top|htop|Linux|
+|wget|wget -c|Linux|
+|curl|curl -w "\n"|Linux|
+|ca|cal|Linux|
+|da|date|Linux|
+|c|clear|Linux|
+|f|finger|Linux|
+|j|job -l|Linux|
+|bc| bc -l|Linux|
