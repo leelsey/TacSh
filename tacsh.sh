@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-tacshVer="0.1"
+source ./package.sh
 tacshGenDirPath="./src"
 tacshDirPath="\$HOME/.config/tacsh"
 msgReadme="Read the README.md for build options."
 
-funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $tacshVer \n$1                        by leelsey \n" ; }
+funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $version \n$1                        by $author \n" ; }
 funcRmFile() { if [ -f $taschGenFilePath ] ; then rm -rf $taschGenFilePath ; fi ; }
 funcMkFile() { mkdir -p $taschGenDirPath ; touch $taschGenFilePath && chmod 600 $taschGenFilePath ; funcTitle "# " >> $taschGenFilePath ; }
 funcAddFile() { echo -e $1 >> $taschGenFilePath ; }
@@ -15,22 +15,16 @@ funcGen() {
     funcMkFile
 
     # Funtional command part
-    funcAddFile "# TACTICAL COMMAND"
+    funcAddFile "# $description"
 
     # About TacSh
     funcAddFile "\n# ABOUT TACSH"
     funcAddFile "tacsh () {"
-    funcAddFile "\ttacshVer=\"$tacshVer\""
     funcAddFile "\ttacshPath=\"\$HOME/.config/tacsh/tac.sh\""
-    funcAddFile "\tif [[ \$1 == ver ]] || [[ \$1 == version ]]; then"
-    funcAddFile "\t\techo \"ver \$tacshVer\" ;"
-    funcAddFile "\telif [[ \$1 == ls ]] || [[ \$1 == list ]]; then"
-    funcAddFile "\t\tcat \"\$tacshPath\" ;"
-    funcAddFile "\telif [[ \$1 == conf ]] || [[ \$1 == config ]] || [[ \$1 == configure ]]; then"
-    funcAddFile "\t\tvi \"\$tacshPath\" ;"
-    funcAddFile "\telse"
-    funcAddFile "\t\techo \"try 'tacsh ver' or 'tacsh ls' or 'tacsh conf'\""
-    funcAddFile "\tfi"
+    funcAddFile "\tif [[ \$1 == ver ]] || [[ \$1 == version ]]; then echo \"ver $version\" ;"
+    funcAddFile "\telif [[ \$1 == ls ]] || [[ \$1 == list ]]; then cat \"\$tacshPath\" ;"
+    funcAddFile "\telif [[ \$1 == conf ]] || [[ \$1 == config ]] || [[ \$1 == configure ]]; then vi \"\$tacshPath\" ;"
+    funcAddFile "\telse echo \"try 'tacsh ver' or 'tacsh ls' or 'tacsh conf'\" ; fi"
     funcAddFile "}"
 
     # About Shell and Evironments
@@ -63,7 +57,7 @@ funcGen() {
     funcAddFile "vilogout () { vi \"\$HOME/.$shLout\" ; }"
     funcAddFile "whichos () { echo \$(uname) ; }"
     if [ $keName = "Linux" ]; then
-        funcAddFile "\n# FIREWALL MANAGEMENT TOOL"
+        funcAddFile "\n# ABOUT FIREWALL MANAGEMENT TOOL"
         if [[ $osName = "Ubuntu" ]]; then
             funcAddFile "#alias firewall='sudo firewall-cmd' # firewall (firewalld)"
             funcAddFile "alias ufw='sudo ufw'                # ufw (uncomplicated firewall)"
@@ -90,7 +84,7 @@ funcGen() {
             funcAddFile "#alias nft='sudo nft'               # nftables (netfilter table)"
             funcAddFile "#alias iptables='sudo iptables'     # iptables (old netfilter)"
         fi
-        funcAddFile "\n# PACKAGE MANAGEMENT TOOL"
+        funcAddFile "\n# ABOUT PACKAGE MANAGEMENT TOOL"
         if [[ $osName = "Ubuntu" ]] || [[ $osName = "Debian" ]] || [[ $osName = "Kali" ]]; then
             funcAddFile "#alias dpkg='sudo dpkg'             # Debian Package Manager for Debian-based"
             funcAddFile "#alias apt='sudo apt'               # Advanced Package Tool for Debian-based"
@@ -393,7 +387,7 @@ funcGen() {
 
     # Alias commands for user (custom)
     if [ $keName = "Linux" ]; then
-        funcAddFile "\n# USER COMMANDS"
+        funcAddFile "\n# ABOUT USER COMMANDS"
         funcAddFile "#alias top='htop'"
         funcAddFile "#alias wget='wget -c'"
         funcAddFile "#alias curl='curl -w \"\\\n\"'"
