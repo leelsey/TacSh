@@ -5,25 +5,24 @@ tacshGenDirPath="./src"
 tacshDirPath="\$HOME/.config/tacsh"
 msgReadme="Read the README.md for build options."
 
-funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $version \n$1                        by $author \n" ; }
-funcRmFile() { if [ -f $taschGenFilePath ]; then rm -rf $taschGenFilePath; fi; }
-funcMkFile() { mkdir -p $taschGenDirPath; touch $taschGenFilePath && chmod 600 $taschGenFilePath; funcTitle "# " >> $taschGenFilePath; }
+funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $version \n$1                        by $author \n"; }
 funcAddFile() { echo -e $1 >> $taschGenFilePath; }
 funcWrong() { echo " • Wrong usage. Please try again."; exit 1; }
 funcGen() {
-    funcRmFile
-    funcMkFile
+    if [ -f $taschGenFilePath ]; then rm -rf $taschGenFilePath; fi
+    mkdir -p $taschGenDirPath; touch $taschGenFilePath && chmod 600 $taschGenFilePath; funcTitle "# " >> $taschGenFilePath
 
     # Funtional command part
     funcAddFile "# $description"
 
     # About TacSh
     funcAddFile "\n# ABOUT TACSH"
+    funcAddFile "TACSH_VERSION=\"$version\""
+    funcAddFile "TACSH_PATH=$tacshDirPath"
     funcAddFile "tacsh () {"
-    funcAddFile "\ttacshPath=\"\$HOME/.config/tacsh/tac.sh\""
-    funcAddFile "\tif [[ \$1 == ver ]] || [[ \$1 == version ]]; then echo \"ver $version\" ;"
-    funcAddFile "\telif [[ \$1 == ls ]] || [[ \$1 == list ]]; then cat \"\$tacshPath\" ;"
-    funcAddFile "\telif [[ \$1 == conf ]] || [[ \$1 == config ]] || [[ \$1 == configure ]]; then vi \"\$tacshPath\" ;"
+    funcAddFile "\tif [[ \$1 == ver ]] || [[ \$1 == version ]]; then echo \"ver \$TACSH_VERSION\" ;"
+    funcAddFile "\telif [[ \$1 == ls ]] || [[ \$1 == list ]]; then cat \"\$TACSH_PATH\" ;"
+    funcAddFile "\telif [[ \$1 == conf ]] || [[ \$1 == config ]] || [[ \$1 == configure ]]; then vi \"\$TACSH_PATH\" ;"
     funcAddFile "\telse echo \"try 'tacsh ver' or 'tacsh ls' or 'tacsh conf'\" ; fi"
     funcAddFile "}"
 
@@ -34,7 +33,7 @@ funcGen() {
     fi
     funcAddFile "shrl () { echo \"reloaded shell\" && exec -l \$SHELL ; }"
     if [ $keName = "Darwin" ]; then
-        funcAddFile "macrl () { killall SystemUIServer ; killall Dock ; killall Finder ; echo \"reloaded macOS GUI\"}"
+        funcAddFile "macrl () { killall SystemUIServer ; killall Dock ; killall Finder ; echo \"reloaded macOS GUI\" ; }"
     fi
     funcAddFile "rlsh () {"
     funcAddFile "\tif [ -f \"\$HOME/.$shPf\" ] || [ -f \"\$HOME/.$shRc\" ]; then"
@@ -461,9 +460,7 @@ elif [ $osCode = 3 ]; then
     taschGenDirPath="$tacshGenDirPath/$osName"
     taschGenFilePath="$taschGenDirPath/tac.sh"
     tacshFilePath="\"$tacshDirPath/tac.bash\""
-else
-    funcWrong
-fi
+else funcWrong; fi
 
 if [ $shName = "zsh" ]; then
     shType="zsh"
