@@ -6,10 +6,10 @@ tacshDirPath="\$HOME/.config/tacsh"
 msgReadme="Read the README.md for build options."
 
 funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $version \n$1                        by $author \n" ; }
-funcRmFile() { if [ -f $taschGenFilePath ] ; then rm -rf $taschGenFilePath ; fi ; }
-funcMkFile() { mkdir -p $taschGenDirPath ; touch $taschGenFilePath && chmod 600 $taschGenFilePath ; funcTitle "# " >> $taschGenFilePath ; }
-funcAddFile() { echo -e $1 >> $taschGenFilePath ; }
-funcWrong() { echo " • Wrong usage. Please try again." ; exit 1 ; }
+funcRmFile() { if [ -f $taschGenFilePath ]; then rm -rf $taschGenFilePath; fi; }
+funcMkFile() { mkdir -p $taschGenDirPath; touch $taschGenFilePath && chmod 600 $taschGenFilePath; funcTitle "# " >> $taschGenFilePath; }
+funcAddFile() { echo -e $1 >> $taschGenFilePath; }
+funcWrong() { echo " • Wrong usage. Please try again."; exit 1; }
 funcGen() {
     funcRmFile
     funcMkFile
