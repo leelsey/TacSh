@@ -4,21 +4,83 @@ source ./package.sh
 tacshGenDirPath="./src"
 tacshDirPath="\$HOME/.config/tacsh"
 msgReadme="Read the README.md for build options."
+tacshLogo="\" ______         ______ \n/_  __/__ _____/ __/ / \n / / / _ \\\`/ __/\\\\ \\\\/ _ \\\\ \n/_/  \\\\_,_/\\\\__/___/_//_/\""
 
 funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $version \n$1                        by $author \n"; }
 funcAddTacSh() { echo -e $1 >> $taschGenFilePath; }
-funcAddInst() { echo -e $1 >> ./installer; }
+funcAddInst() { echo $1 >> ./installer; }
 funcAddUninst() { echo -e $1 >> ./uninstaller; }
 funcWrong() { echo " • Wrong usage. Please try again."; exit 1; }
-# funcGenInst() {
-#     funcAddInst
-# }
-# funcGenUninst() {
-#     funcAddUninst
-# }
+funcMkFile() { if [ ! -f $1 ]; then touch $1 && chmod $2 $1; fi; }
+funcRmFile() { if [ -f $1 ]; then rm -rf $1; fi; }
+funcGenInst() {
+    funcRmFile "./installer"
+    funcMkFile "./installer" 755
+    funcAddInst "#!/usr/bin/env bash"
+    funcAddInst "tacshDirPath=\"\$HOME/.config/tacsh\""
+    funcAddInst "funcWrong() { echo \" • Your environment is not supported.\"; exit 1; }"
+    funcAddInst "funcInstall() {"
+    funcAddInst " echo -e \"- \$2 TacSh ... \\c\""
+    funcAddInst " if [ -f \$tacshFilePath ]; then rm -rf \$tacshFilePath; fi"
+    funcAddInst " if [ ! -f \"./\$srcPath\" ]; then curl -o \$tacshFilePath https://raw.githubusercontent.com/leelsey/TacSh/main/\$srcPath"
+    funcAddInst " else cp \$srcPath \$tacshFilePath; fi"
+    funcAddInst " if [ \$1 = \"install\" ]; then echo -e \"\n# TacSh\nsource \$tacshFilePath\n\" >> \$HOME/\$profileName; fi"
+    funcAddInst " echo -e \"OK \n- Finish to \$1 TacSh!\""
+    funcAddInst " echo -e \"\$3\""
+    funcAddInst "}"
+    echo -e "echo -e $tacshLogo" >> ./installer
+    funcAddInst "echo -e \"\n$name($version) Installer\""
+    funcAddInst "echo -e \"- Check your OS type ... \c\""
+    funcAddInst "if [ \"\$(uname)\" = \"Darwin\" ] || [[ \"\$(uname)\" =~ \"MINGW64\" ]]; then"
+    funcAddInst " if [ \"\$(uname)\" = \"Darwin\" ]; then osName=\"macOS\"; profileName=\".zprofile\""
+    funcAddInst " elif [[ \"\$(uname)\" =~ \"MINGW64\" ]]; then osName=\"Windows\"; profileName=\".bashrc\"; fi"
+    funcAddInst " srcPath=\"src/\$osName/tac.sh\""
+    funcAddInst " tacshFilePath=\"\$tacshDirPath/tac.sh\""
+    funcAddInst "elif [ \"\$(uname)\" = \"Linux\" ]; then"
+    funcAddInst " source /etc/os-release"
+    funcAddInst " if [ \"\$ID\" = \"ubuntu\" ]; then osName=\"Ubuntu\""
+    funcAddInst " elif [ \"\$ID\" = \"debian\" ]; then osName=\"Debian\""
+    funcAddInst " elif [ \"\$ID\" = \"fedora\" ]; then osName=\"Fedora\""
+    funcAddInst " elif [ \"\$ID\" = \"centos\" ]; then osName=\"CentOS\""
+    funcAddInst " elif [ \"\$ID\" = \"rhel\" ]; then osName=\"RHEL\""
+    funcAddInst " elif [[ \"\$ID\" =~ \"suse\" ]]; then osName=\"SUSE\""
+    funcAddInst " elif [ \"\$ID\" = \"arch\" ]; then osName=\"Arch\""
+    funcAddInst " elif [ \"\$ID\" = \"kali\" ]; then osName=\"Kali\""
+    funcAddInst " else"
+    funcAddInst "  if [[ \"\$ID_LIKE\" =~ \"debian\" ]]; then osName=\"Debian\""
+    funcAddInst "  elif [[ \"\$ID_LIKE\" =~ \"fedora\" ]] || [[ "\$ID_LIKE" =~ \"rhel\" ]]; then osName=\"fedora\""
+    funcAddInst "  elif [[ \"\$ID_LIKE\" =~ \"arch\" ]]; then osName=\"Arch\""
+    funcAddInst "  else osName=\"Linux\"; fi"
+    funcAddInst " fi"
+    funcAddInst " if [ -n \"\`\$SHELL -c 'echo \$ZSH_VERSION'\`\" ]; then profileName=\".zshrc\"; tacshFileName=\"tac.zsh\";"
+    funcAddInst " elif [ -n \"\`\$SHELL -c 'echo \$BASH_VERSION'\`\" ]; then profileName=\".bashrc\"; tacshFileName=\"tac.bash\"; fi"
+    funcAddInst " if [ osName=\"Linux\" ]; then srcPath=\"src/Linux/\$tacshFileName\""
+    funcAddInst " else srcPath=\"src/Linux/\$osName/\$tacshFileName\"; fi"
+    funcAddInst " tacshFilePath=\"\$tacshDirPath/\$tacshFileName\""
+    funcAddInst "else funcWrong; fi"
+    funcAddInst "echo -e \"OK \n- Check your Shell type ... \c\""
+    funcAddInst "if [ -n \"\`\$SHELL -c 'echo \$ZSH_VERSION'\`\" ] || [ -n \"\`\$SHELL -c 'echo \$BASH_VERSION'\`\" ]; then echo -e \"OK \""
+    funcAddInst "else funcWrong; fi;"
+    funcAddInst "if [ -f \$tacshFilePath ]; then"
+    funcAddInst " if [[ \$TACSH_VERSION = \"$version\" ]]; then instType=\"reinstall\"; msgInst=\"Reinstalling\""
+    funcAddInst " elif [[ \$TACSH_VERSION < \"$version\" ]]; then instType=\"update\"; msgInst=\"Updating\""
+    funcAddInst " else instType=\"change\"; msgInst=\"Changing stable version\"; fi"
+    funcAddInst " msgFinish=\" • Restart your shell use 'shrl' or 'source ~/\$profileName'\n • If not work, check 'source \$tacshFilePath' include in '~/\$profileName'.\""
+    funcAddInst "else"
+    funcAddInst " instType=\"install\"; msgInst=\"Installing\""
+    funcAddInst " msgFinish=\" • Try 'source ~/$profileName' or restart Terminal to load the TacSh.\""
+    funcAddInst "fi"
+    funcAddInst "funcInstall \"\$instType\" \"\$msgInst\" \"\$msgFinish\""
+}
+funcGenUninst() {
+    funcRmFile "./uninstaller"
+    funcAddUninst ""
+}
 funcGenTacSh() {
-    if [ -f $taschGenFilePath ]; then rm -rf $taschGenFilePath; fi
-    mkdir -p $taschGenDirPath; touch $taschGenFilePath && chmod 600 $taschGenFilePath; funcTitle "# " >> $taschGenFilePath
+    mkdir -p $taschGenDirPath
+    funcRmFile $taschGenFilePath
+    funcMkFile $taschGenFilePath 600
+    funcTitle "# " >> $taschGenFilePath
 
     # Funtional command part
     funcAddTacSh "# $description"
@@ -410,8 +472,9 @@ funcGenTacSh() {
 # MAIN
 funcTitle ""
 
-if [ $1 = 0 ]; then osCode=0
-    # Build installer and uninstaller
+if [ $1 = 0 ]; then
+    funcGenInst
+    exit 1;
 elif [ $1 = 1 ]; then osCode=1
 elif [ $1 = 2 ]; then osCode=2
     if [ $2 = 1 ]; then luCode=1
