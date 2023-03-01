@@ -70,6 +70,7 @@ funcGenInst() {
     funcAddInst " instType=\"install\"; msgInst=\"Installing\""
     funcAddInst " msgFinish=\" • Try 'source ~/$profileName' or restart Terminal to load the TacSh.\""
     funcAddInst "fi"
+    funcAddInst "mkdir -p \$tacshDirPath"
     funcAddInst "funcInstall \"\$instType\" \"\$msgInst\" \"\$msgFinish\""
 }
 funcGenUninst() {
@@ -512,7 +513,7 @@ funcGenTacSh() {
 funcTitle ""
 
 if [ $1 = 0 ]; then
-    # funcGenInst
+    funcGenInst
     funcGenUninst
     exit 1;
 elif [ $1 = 1 ]; then osCode=1
