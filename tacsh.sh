@@ -9,7 +9,7 @@ tacshLogo="\" ______         ______ \n/_  __/__ _____/ __/ / \n / / / _ \\\`/ __
 funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 / / / _ \`/ __/\\ \\/ _ \\ \n$1/_/  \\_,_/\\__/___/_//_/ ver $version \n$1                        by $author \n"; }
 funcAddTacSh() { echo -e $1 >> $taschGenFilePath; }
 funcAddInst() { echo $1 >> ./installer; }
-funcAddUninst() { echo -e $1 >> ./uninstaller; }
+funcAddUninst() { echo $1 >> ./uninstaller; }
 funcWrong() { echo " • Wrong usage. Please try again."; exit 1; }
 funcMkFile() { if [ ! -f $1 ]; then touch $1 && chmod $2 $1; fi; }
 funcRmFile() { if [ -f $1 ]; then rm -rf $1; fi; }
@@ -74,7 +74,46 @@ funcGenInst() {
 }
 funcGenUninst() {
     funcRmFile "./uninstaller"
-    funcAddUninst ""
+    funcMkFile "./uninstaller" 755
+    funcAddUninst "#!/usr/bin/env bash"
+    funcAddUninst "tacshDirPath=\"\$HOME/.config/tacsh\""
+    funcAddUninst "funcWrong() { echo \" • Your environment is not supported.\"; exit 1; }"
+    funcAddUninst "funcUninstall() {"
+    funcAddUninst "    if [ -f \$2 ]; then"
+    funcAddUninst "        read -p \"Are you sure to remove TacSh? (Y/N): \" confirm && [[ \$confirm == [yY] || \$confirm == [yY][eE][sS] ]] || exit 1"
+    funcAddUninst "        echo -e \"- funcUninstalling TacSh$4 ... \c\""
+    funcAddUninst "        if [ \$1 == \"1\" ]; then rm -rf \$tacshDirPath"
+    funcAddUninst "        elif [ \$1 == \"2\" ]; then rm -f \$2"
+    funcAddUninst "        else exit 1; fi"
+    funcAddUninst "    else echo -e \" • TacSh is not installed.\"; exit 1; fi"
+    funcAddUninst "    echo -e \"OK \n • Finish to funcUninstall TacSh\$4! \n • Please remove manually in ~/\$3 \n • Thank you for using TacSh!\""
+    funcAddUninst "}"
+    funcAddUninst "echo -e \"echo -e \$tacshLogo\" >> ./installer"
+    funcAddUninst "echo -e \"\nTacSh uninstaller\""
+    funcAddUninst "if [ \"\$(uname)\" = \"Darwin\" ]; then"
+    funcAddUninst "    tacshFilePath=\"\$tacshDirPath/tac.sh\""
+    funcAddUninst "    profileName=\".zprofile\""
+    funcAddUninst "    funcUninstall 1 \$tacshFilePath \$profileName \"\""
+    funcAddUninst "elif [ \"\$(uname)\" = \"Linux\" ]; then"
+    funcAddUninst "    if [ -n \"\`\$SHELL -c 'echo \$ZSH_VERSION'\`\" ]; then"
+    funcAddUninst "        tacshFileName=\"tac.zsh\""
+    funcAddUninst "        tacshFilePath=\"\$tacshDirPath/\$tacshFileName\""
+    funcAddUninst "        profileName=\".zshrc\""
+    funcAddUninst "    elif [ -n \"\`\$SHELL -c 'echo \$BASH_VERSION'\`\" ]; then"
+    funcAddUninst "        tacshFileName=\"tac.bash\""
+    funcAddUninst "        tacshFilePath=\"\$tacshDirPath/\$tacshFileName\""
+    funcAddUninst "        profileName=\".bashrc\""
+    funcAddUninst "    else funcWrong; fi"
+    funcAddUninst "    if [ -f \"\$tacshDirPath/tac.zsh\" ] && [ -f \"\$tacshDirPath/tac.bash\" ] ; then"
+    funcAddUninst "        read -p \"Which shell do you want to funcUninstall? (1: \$tacshFileName, 2. all): \" choose && [[ \$choose == [12as] ]] || exit 1"
+    funcAddUninst "        if [[ \"\$choose\" == \"1\" || \"\$choose\" == \"s\" ]]; then funcUninstall 2 \$tacshFilePath \$profileName \" \$tacshFileName\""
+    funcAddUninst "        elif [[ \"\$choose\" == \"2\" || \"\$choose\" == \"a\" ]]; then funcUninstall 1 \$tacshFilePath \$profileName \" all\"; fi"
+    funcAddUninst "    else funcUninstall 1 \$tacshFilePath \$profileName \"\"; fi"
+    funcAddUninst "elif [[ \"\$(uname)\" =~ \"MINGW64\" ]]; then "
+    funcAddUninst "    tacshFilePath=\"\$tacshDirPath/tac.sh\""
+    funcAddUninst "    profileName=\".bashrc\""
+    funcAddUninst "    funcUninstall 1 \$tacshFilePath \$profileName \"\""
+    funcAddUninst "else funcWrong; fi"
 }
 funcGenTacSh() {
     mkdir -p $taschGenDirPath
@@ -473,7 +512,8 @@ funcGenTacSh() {
 funcTitle ""
 
 if [ $1 = 0 ]; then
-    funcGenInst
+    # funcGenInst
+    funcGenUninst
     exit 1;
 elif [ $1 = 1 ]; then osCode=1
 elif [ $1 = 2 ]; then osCode=2
