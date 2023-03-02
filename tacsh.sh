@@ -512,30 +512,35 @@ funcGenTacSh() {
 # MAIN
 funcTitle ""
 
-if [ $1 = 0 ]; then
-    funcGenInst
-    funcGenUninst
-    exit 1;
-elif [ $1 = 1 ]; then osCode=1
-elif [ $1 = 2 ]; then osCode=2
-    if [ $2 = 1 ]; then luCode=1
-    elif [ $2 = 2 ]; then luCode=2
-    elif [ $2 = 3 ]; then luCode=3
-    elif [ $2 = 4 ]; then luCode=4
-    elif [ $2 = 5 ]; then luCode=5
-    elif [ $2 = 6 ]; then luCode=6
-    elif [ $2 = 7 ]; then luCode=7
-    elif [ $2 = 8 ]; then luCode=8
-    elif [ $2 = 9 ]; then luCode=9
+if [[ $1 = 0 ]]; then osCode=0
+    if [[ $2 = 1 ]]; then inCode=1
+    elif [[ $2 = 2 ]]; then inCode=2
+    else echo "$msgReadme"; read -p "- Build installer type: " inCode; fi
+elif [[ $1 = 1 ]]; then osCode=1
+elif [[ $1 = 2 ]]; then osCode=2
+    if [[ $2 = 1 ]]; then luCode=1
+    elif [[ $2 = 2 ]]; then luCode=2
+    elif [[ $2 = 3 ]]; then luCode=3
+    elif [[ $2 = 4 ]]; then luCode=4
+    elif [[ $2 = 5 ]]; then luCode=5
+    elif [[ $2 = 6 ]]; then luCode=6
+    elif [[ $2 = 7 ]]; then luCode=7
+    elif [[ $2 = 8 ]]; then luCode=8
+    elif [[ $2 = 9 ]]; then luCode=9
     else echo "$msgReadme"; read -p "- Build Linux type: " luCode; fi
-    if [ $3 = 1 ]; then shCode=1
-    elif [ $3 = 2 ]; then shCode=2
+    if [[ $3 = 1 ]]; then shCode=1
+    elif [[ $3 = 2 ]]; then shCode=2
     else echo "$msgReadme"; read -p "- Build shell type: " shCode; fi
-elif [ $1 = 3 ]; then osCode=3
+elif [[ $1 = 3 ]]; then osCode=3
 else echo "$msgReadme"; read -p "- Build OS type: " osCode
 fi
 
-if [ $osCode = 1 ]; then
+if [ $osCode = 0 ]; then
+    if [ $inCode = 1 ]; then funcGenInst; msgInst="installer"
+    elif [ $inCode = 2 ]; then funcGenUninst; msgInst="uninstaller"
+    else funcWrong; fi
+    echo "- Generated $msgInst file: ./$msgInst"; exit 1
+elif [ $osCode = 1 ]; then
     keName="Darwin"
     osName="macOS"
     shName="zsh"
