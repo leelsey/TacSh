@@ -511,7 +511,6 @@ funcGenTacSh() {
 
 # MAIN
 funcTitle ""
-
 if [[ $1 = 0 ]]; then osCode=0
     if [[ $2 = 1 ]]; then inCode=1
     elif [[ $2 = 2 ]]; then inCode=2
@@ -526,14 +525,11 @@ elif [[ $1 = 2 ]]; then osCode=2
     elif [[ $2 = 6 ]]; then luCode=6
     elif [[ $2 = 7 ]]; then luCode=7
     elif [[ $2 = 8 ]]; then luCode=8
-    elif [[ $2 = 9 ]]; then luCode=9
-    else echo "$msgReadme"; read -p "- Build Linux type: " luCode; fi
+    elif [[ $2 = 9 ]]; then luCode=9; fi
     if [[ $3 = 1 ]]; then shCode=1
-    elif [[ $3 = 2 ]]; then shCode=2
-    else echo "$msgReadme"; read -p "- Build shell type: " shCode; fi
+    elif [[ $3 = 2 ]]; then shCode=2; fi
 elif [[ $1 = 3 ]]; then osCode=3
-else echo "$msgReadme"; read -p "- Build OS type: " osCode
-fi
+else echo "$msgReadme"; read -p "- Build OS type: " osCode; fi
 
 if [ $osCode = 0 ]; then
     if [ $inCode = 1 ]; then funcGenInst; msgInst="installer"
@@ -550,6 +546,7 @@ elif [ $osCode = 1 ]; then
     iCloudPath="\"\$HOME/Library/Mobile Documents/com~apple~CloudDocs\""
     dropboxPath="\"\$HOME/Library/CloudStorage/Dropbox\""
 elif [ $osCode = 2 ]; then keName="Linux"
+    if [ -z $luCode ] || [ -z $shCode ]; then echo "$msgReadme"; fi
     if [ -z $luCode ]; then read -p "- Build Linux type: " luCode; fi
     if [ -z $shCode ]; then read -p "- Build shell type: " shCode; fi
     if [ $luCode = 1 ]; then osName="Ubuntu"
@@ -595,7 +592,7 @@ elif [ $shName = "bash" ]; then
     shRc="bashrc"
     shLin="bash_login"
     shLout="bash_logout"
-fi
+else funcWrong; fi
 
 echo "- Selected Enironment: $osName($keName) & $shName"
 funcGenTacSh
