@@ -47,7 +47,8 @@ funcGenInst() {
     funcAddInst " elif [ \"\$ID\" = \"arch\" ]; then osName=\"Arch\""
     funcAddInst " elif [ \"\$ID\" = \"kali\" ]; then osName=\"Kali\""
     funcAddInst " else"
-    funcAddInst "  if [[ \"\$ID_LIKE\" =~ \"debian\" ]]; then osName=\"Debian\""
+    funcAddInst "  if [[ \"\$ID_LIKE\" =~ \"ubuntu\" ]]; then osName=\"Ubuntu\""
+    funcAddInst "  elif [[ \"\$ID_LIKE\" =~ \"debian\" ]]; then osName=\"Debian\""
     funcAddInst "  elif [[ \"\$ID_LIKE\" =~ \"fedora\" ]] || [[ "\$ID_LIKE" =~ \"rhel\" ]]; then osName=\"fedora\""
     funcAddInst "  elif [[ \"\$ID_LIKE\" =~ \"arch\" ]]; then osName=\"Arch\""
     funcAddInst "  else osName=\"Linux\"; fi"
@@ -269,7 +270,7 @@ funcGenTacSh() {
 
     # About Extended Command
     funcAddTacSh "\n# ABOUT EXTENDED COMMAND"
-    if [ $keName = "Darwin" ] || ; then
+    if [ $keName = "Darwin" ]; then
         funcAddTacSh "l () { ls -C \"\$@\" ; }"
         funcAddTacSh "ll () { ls -l \"\$@\" ; }"
         funcAddTacSh "la () { ls -A \"\$@\" ; }"
