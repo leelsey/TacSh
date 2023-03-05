@@ -5,6 +5,8 @@ funcTitle() { echo -e "$1 ______         ______ \n$1/_  __/__ _____/ __/ / \n$1 
 funcAB() { ./tacsh.sh $@ >> /dev/null ; echo "+ Run: ./tacsh.sh $@" ; }
 funcTitle ""
 echo "- Start $name AutoBuild"
+funcAB 0 1 0
+funcAB 0 2 0
 funcAB 1 0 0
 funcAB 2 1 1
 funcAB 2 1 2
