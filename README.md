@@ -2,8 +2,8 @@
 ### Tactical Shell Command
 
 ## Support Shell
+- Zsh
 - Bash
-- ZSH
 
 ## Support Operating System
 - macOS
@@ -23,56 +23,60 @@
 |Arch|YES|YES|
 |Kali|YES|YES|
 |Windows|NO|YES|
-Also, support other Linux distribution and Unix-like OS.
+Also, support other Linux distribution and Unix-like OS. Try run `./installer`!
 
 ## How to install TacSh
 ### 1) Install TacSh
 Download and install TacSh. Before install, you should have bash.
 #### Use stable release
 ```bash
-wget -c https://github.com/leelsey/TacSh/releases/download/v0.1/install.sh -O tacsh-installer
-./tacsh-installer
+wget -c https://github.com/leelsey/TacSh/releases/download/v0.1/installer -O tacsh-installer && ./tacsh-installer
 ```
 #### Use git release
 ```bash
-git clone https://github.com/leelsey/TacSh.git && cd TacSh
-./install.sh
+git clone https://github.com/leelsey/TacSh.git && cd TacSh && ./installer
 ```
+#### Manually
+Check `src` direcotry and copy to `~/.config/tacsh` directory.
 ### 2) Reload shell resource file
 Reload shell resource file.
-#### Bash
-```bash
-source ~/.bash_profile
-```
-#### Zsh
+#### macOS
 ```bash
 source ~/.zprofile
 ```
+#### Linux (Zsh)
+```bash
+source ~/.zshrc
+```
+#### Linux (Bash)
+```bash
+source ~/.bashrc
+```
+#### Windows(MinGW)
+```bash
+source ~/.bashrc
+```
 ### 3) If you change option, try this
 ```bash
-vitacsh
+tacsh conf
 ```
 ### 4) Uninstall TacSh
 #### Use stable release
 ```bash
-wget -c https://github.com/leelsey/TacSh/releases/download/v0.1/uninstall.sh -O tacsh-uninstaller
-./tacsh-uninstaller
+wget -c https://github.com/leelsey/TacSh/releases/download/v0.1/uninstaller -O tacsh-uninstaller && ./tacsh-uninstaller
 # Remove TacSh from shell resource file
 ```
 #### Use git release
 ```bash
-git clone https://github.com/leelsey/TacSh.git && cd TacSh
-./uninstall.sh
+git clone https://github.com/leelsey/TacSh.git && cd TacSh && ./uninstaller
 # Remove TacSh from shell resource file
 ```
 #### Manually
-```bash
-rm -rf ~/.config/tacsh
-# Remove TacSh from shell resource file
-```
+Try `rm -rf ~/.config/tacsh` and remove TacSh from shell resource file.
 
 ## Usage of TacSh
 #### Command List
+Windows(MinGW) is same to Linux.
 
 ### About TacSh Control
 |Command|Usage|OS|
@@ -186,6 +190,7 @@ rm -rf ~/.config/tacsh
 |sy|Copy(yank) in shell|macOS|
 |sp|Paste in shell|macOS/Linux|
 |pwdc|Copy pwd|macOS/Linux|
+|shspeed|Shell speed test|macOS/Linux|
 |p|Pass command|macOS/Linux|
 |jctl|Java control|macOS/Linux|
 |dockerun|Docker run check|macOS/Linux|
