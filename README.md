@@ -208,3 +208,38 @@ Windows(MinGW) is same to Linux.
 |f|finger|Linux|
 |j|job -l|Linux|
 |bc| bc -l|Linux|
+
+
+## Build TacSh Options
+### Build all TacSh
+```bash
+./autobuild.sh
+```
+### Build TacSh with options
+```bash
+./tacsh.sh
+``` 
+|1st|2nd|3rd|Explain|
+|---|---|---|---|
+|0|1|null|Build installer|
+|0|2|null|Build uninstaller|
+|1|null|null|Build tac.sh for macOS|
+|2|1|1|Build tac.zsh for Ubuntu|
+|2|1|2|Build tac.bash for Ubuntu|
+|2|2|1|Build tac.zsh for Debian|
+|2|2|2|Build tac.bash for Debian|
+|2|3|1|Build tac.zsh for Fedora|
+|2|3|2|Build tac.bash for Fedora|
+|2|4|1|Build tac.zsh for CentOS|
+|2|4|2|Build tac.bash for CentOS|
+|2|5|1|Build tac.zsh for RHEL|
+|2|5|2|Build tac.bash for RHEL|
+|2|6|1|Build tac.zsh for SUSE|
+|2|6|2|Build tac.bash for SUSE|
+|2|7|1|Build tac.zsh for Arch|
+|2|7|2|Build tac.bash for Arch|
+|2|8|1|Build tac.zsh for Kali|
+|2|8|2|Build tac.bash for Kali|
+|2|9|1|Build tac.zsh for Other Linux|
+|2|9|2|Build tac.bash for Other Linux|
+|3|null|null|Build tac.sh for Windows|
