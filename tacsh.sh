@@ -310,6 +310,7 @@ funcGenTacSh() {
     funcAddTacSh "cdh () { cd ~/\"\$@\" ; }"
     funcAddTacSh "his () { history \"\$@\" ; }"
     funcAddTacSh "cls () { clear ; }"
+    funcAddTacSh "clr () { reset ; }"
     if [ $shName = "zsh" ]; then
         funcAddTacSh "clh () { echo -n > ~/.zsh_history && history -p  && exec \$SHELL -l; }"
         funcAddTacSh "clha () { echo -n > ~/.zsh_history && history -p && rm -f ~/.bash_history; rm -f ~/.node_repl_history; rm -f ~/.python_history; exec \$SHELL -l; }"
