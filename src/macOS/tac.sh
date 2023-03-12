@@ -124,6 +124,7 @@ p () {
 		elif [[ $1 == mv ]] || [[ $1 == mov ]] || [[ $1 == Mov ]]; then cd ~/Movies
 		elif [[ $1 == ms ]] || [[ $1 == mus ]] || [[ $1 == Mus ]]; then cd ~/Music
 		elif [[ $1 == pc ]] || [[ $1 == pic ]] || [[ $1 == Pic ]]; then cd ~/Pictures
+		elif [[ $1 == pb ]] || [[ $1 == pub ]] || [[ $1 == Pub ]]; then cd ~/Public
 		elif [[ $1 == cl ]] || [[ $1 == cld ]] || [[ $1 == Cld ]]; then
 			if [ -d "$HOME/Library/Mobile Documents/com~apple~CloudDocs" ]; then cd "$HOME/Library/Mobile Documents/com~apple~CloudDocs" ; else echo "p: wrong usage, try p -h" ; fi
 		elif [[ $1 == db ]] || [[ $1 == drb ]] || [[ $1 == Drb ]]; then
@@ -144,6 +145,7 @@ p () {
 			echo "p mv, mov: change direcotry to movies directory"
 			echo "p ms, mus: change direcotry to music directory"
 			echo "p pc, pic: change direcotry to pictures directory"
+			echo "p pb, pub: change direcotry to public directory"
 			echo "p cl, cld: change direcotry to icloud directory"
 			echo "p db, drb: change direcotry to dropbox directory"
 			echo "p -h: output usage"

@@ -388,8 +388,8 @@ funcGenTacSh() {
     funcAddTacSh "\t\telif [[ \$1 == ms ]] || [[ \$1 == mus ]] || [[ \$1 == Mus ]]; then cd ~/Music"
     funcAddTacSh "\t\telif [[ \$1 == pc ]] || [[ \$1 == pic ]] || [[ \$1 == Pic ]]; then cd ~/Pictures"
     if [ $keName = "Darwin" ]; then
+        funcAddTacSh "\t\telif [[ \$1 == pb ]] || [[ \$1 == pub ]] || [[ \$1 == Pub ]]; then cd ~/Public"
         funcAddTacSh "\t\telif [[ \$1 == cl ]] || [[ \$1 == cld ]] || [[ \$1 == Cld ]]; then"
-        # funcAddTacSh "\t\t\tcd $iCloudPath"
         funcAddTacSh "\t\t\tif [ -d $iCloudPath ]; then cd $iCloudPath ; else echo \"p: wrong usage, try p -h\" ; fi"
     elif [ $keName = "Linux" ] || [ $keName = "MinGW64" ]; then
         funcAddTacSh "\t\telif [[ \$1 == vd ]] || [[ \$1 == vid ]] || [[ \$1 == Vid ]]; then cd ~/Videos"
@@ -419,6 +419,7 @@ funcGenTacSh() {
     funcAddTacSh "\t\t\techo \"p ms, mus: change direcotry to music directory\""
     funcAddTacSh "\t\t\techo \"p pc, pic: change direcotry to pictures directory\""
     if [ $keName = "Darwin" ]; then
+        funcAddTacSh "\t\t\techo \"p pb, pub: change direcotry to public directory\""
         funcAddTacSh "\t\t\techo \"p cl, cld: change direcotry to icloud directory\""
     elif [ $keName = "Linux" ] || [ $keName = "MinGW64" ]; then
         funcAddTacSh "\t\t\techo \"p vd, vid: change direcotry to videos directory\""
