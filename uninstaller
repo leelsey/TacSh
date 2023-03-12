@@ -27,7 +27,7 @@ tacshFileName="tac.bash"
 tacshFilePath="$tacshDirPath/$tacshFileName"
 profileName=".bashrc"
 else funcWrong; fi
-if [ -f "$tacshDirPath/tac.zsh" ] && [ -f "$tacshDirPath/tac.bash" ] ; then
+if [ -f "$tacshDirPath/tac.zsh" ] && [ -f "$tacshDirPath/tac.bash" ]; then
 read -p "Which shell do you want to funcUninstall? (1: $tacshFileName, 2. all): " choose && [[ $choose == [12as] ]] || exit 1
 if [[ "$choose" == "1" || "$choose" == "s" ]]; then funcUninstall 2 $tacshFilePath $profileName " $tacshFileName"
 elif [[ "$choose" == "2" || "$choose" == "a" ]]; then funcUninstall 1 $tacshFilePath $profileName " all"; fi
