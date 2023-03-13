@@ -13,7 +13,7 @@ DROPBOX_HOME="$HOME/Dropbox"
 tacsh () {
 	if [[ $1 == ver ]] || [[ $1 == version ]]; then echo "ver $TACSH_VERSION"
 	elif [[ $1 == ls ]] || [[ $1 == list ]]; then cat "$TACSH_HOME/tac.bash"
-	elif [[ $1 == conf ]] || [[ $1 == config ]] || [[ $1 == configure ]]; then vi "$TACSH_HOME/tac.bash"
+	elif [[ $1 == conf ]] || [[ $1 == config ]] || [[ $1 == configure ]]; then /usr/bin/vi "$TACSH_HOME/tac.bash"
 	else echo "try 'tacsh ver' or 'tacsh ls' or 'tacsh conf'"; fi
 }
 
@@ -21,16 +21,20 @@ tacsh () {
 admin () { sudo -i; }
 shrl () { echo "reloaded shell" && exec -l $SHELL; }
 rlsh () {
-	if [ -f "$HOME/.bash_profile" ] || [ -f "$HOME/.bashrc" ]; then source "$HOME/.bash_profile" && source "$HOME/.bashrc"; echo "reloaded .bash_profile and .bashrc"
-	elif [ -f "$HOME/.bashrc" ]; then source "$HOME/.bashrc"; echo "reloaded .bashrc"
-	elif [ -f "$HOME/.bash_profile" ]; then source "$HOME/.bash_profile"; echo "reloaded .bash_profile"
-	else echo "shrl: No environment file found"; fi
+	if [ ! -f "$HOME/.bash_env" ] && [ ! -f "$HOME/.bash_profile" ] && [ ! -f "$HOME/.bashrc" ] && [ ! -f "$HOME/.bash_login" ] && [ ! -f "$HOME/.bash_logout" ]
+	then echo "not found bash environment files"; exit 1; fi
+	if [ -f "$HOME/.bash_env" ]; then source "$HOME/.bash_env"; RLSH_MSG=" bash_env"; fi
+	if [ -f "$HOME/.bash_profile" ]; then source "$HOME/.bash_profile"; RLSH_MSG=$RLSH_MSG" bash_profile"; fi
+	if [ -f "$HOME/.bashrc" ]; then source "$HOME/.bashrc"; RLSH_MSG=$RLSH_MSG" bashrc"; fi
+	if [ -f "$HOME/.bash_login" ]; then source "$HOME/.bash_login"; RLSH_MSG=$RLSH_MSG" bash_login"; fi
+	if [ -f "$HOME/.bash_logout" ]; then source "$HOME/.bash_logout"; RLSH_MSG=$RLSH_MSG" bash_logout"; fi
+	echo "reloaded bash environment files:$RLSH_MSG"
 }
-vienv () { vi "$HOME/.bash_env"; }
-viprofile () { vi "$HOME/.bash_profile"; }
-virc () { vi "$HOME/.bashrc"; }
-vilogin () { vi "$HOME/.bash_login"; }
-vilogout () { vi "$HOME/.bash_logout"; }
+vienv () { /usr/bin/vi "$HOME/.bash_env"; }
+viprofile () { /usr/bin/vi "$HOME/.bash_profile"; }
+virc () { /usr/bin/vi "$HOME/.bashrc"; }
+vilogin () { /usr/bin/vi "$HOME/.bash_login"; }
+vilogout () { /usr/bin/vi "$HOME/.bash_logout"; }
 whichos () { echo $(uname); }
 
 # ABOUT FIREWALL MANAGEMENT TOOL
@@ -111,9 +115,7 @@ shspeed () { if [ -z $1 ]; then 1=1; fi; for i in {1..$1}; do /usr/bin/time $SHE
 p () {
 	if [ $# -eq 0 ]; then cd ..
 	elif [ $# -eq 1 ]; then
-		if [[ $1 =~ '^[0-9]+$' ]]; then
-			if [[ $1 == 0 ]]; then pwd
-			else printf -v cdpFull '%*s' $1; cd "${cdpFull// /"../"}"; fi
+		if [[ $1 =~ '^[0-9]+$' ]]; then if [[ $1 == 0 ]]; then pwd; else printf -v cdpFull '%*s' $1; cd "${cdpFull// /"../"}"; fi
 		elif [[ $1 =~ '^[p]+$' ]]; then pwd
 		elif [[ $1 =~ '^[b]+$' ]] || [[ $1 == - ]]; then cd -
 		elif [[ $1 =~ '^[r]+$' ]] || [[ $1 == / ]]; then cd /

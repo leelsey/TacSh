@@ -13,7 +13,7 @@ DROPBOX_HOME="$HOME/Dropbox"
 tacsh () {
 	if [[ $1 == ver ]] || [[ $1 == version ]]; then echo "ver $TACSH_VERSION"
 	elif [[ $1 == ls ]] || [[ $1 == list ]]; then cat "$TACSH_HOME/tac.zsh"
-	elif [[ $1 == conf ]] || [[ $1 == config ]] || [[ $1 == configure ]]; then vi "$TACSH_HOME/tac.zsh"
+	elif [[ $1 == conf ]] || [[ $1 == config ]] || [[ $1 == configure ]]; then /usr/bin/vi "$TACSH_HOME/tac.zsh"
 	else echo "try 'tacsh ver' or 'tacsh ls' or 'tacsh conf'"; fi
 }
 
@@ -21,16 +21,20 @@ tacsh () {
 admin () { sudo -i; }
 shrl () { echo "reloaded shell" && exec -l $SHELL; }
 rlsh () {
-	if [ -f "$HOME/.zprofile" ] || [ -f "$HOME/.zshrc" ]; then source "$HOME/.zprofile" && source "$HOME/.zshrc"; echo "reloaded .zprofile and .zshrc"
-	elif [ -f "$HOME/.zshrc" ]; then source "$HOME/.zshrc"; echo "reloaded .zshrc"
-	elif [ -f "$HOME/.zprofile" ]; then source "$HOME/.zprofile"; echo "reloaded .zprofile"
-	else echo "shrl: No environment file found"; fi
+	if [ ! -f "$HOME/.zshenv" ] && [ ! -f "$HOME/.zprofile" ] && [ ! -f "$HOME/.zshrc" ] && [ ! -f "$HOME/.zlogin" ] && [ ! -f "$HOME/.zlogout" ]
+	then echo "not found zsh environment files"; exit 1; fi
+	if [ -f "$HOME/.zshenv" ]; then source "$HOME/.zshenv"; RLSH_MSG=" zshenv"; fi
+	if [ -f "$HOME/.zprofile" ]; then source "$HOME/.zprofile"; RLSH_MSG=$RLSH_MSG" zprofile"; fi
+	if [ -f "$HOME/.zshrc" ]; then source "$HOME/.zshrc"; RLSH_MSG=$RLSH_MSG" zshrc"; fi
+	if [ -f "$HOME/.zlogin" ]; then source "$HOME/.zlogin"; RLSH_MSG=$RLSH_MSG" zlogin"; fi
+	if [ -f "$HOME/.zlogout" ]; then source "$HOME/.zlogout"; RLSH_MSG=$RLSH_MSG" zlogout"; fi
+	echo "reloaded zsh environment files:$RLSH_MSG"
 }
-vienv () { vi "$HOME/.zshenv"; }
-viprofile () { vi "$HOME/.zprofile"; }
-virc () { vi "$HOME/.zshrc"; }
-vilogin () { vi "$HOME/.zlogin"; }
-vilogout () { vi "$HOME/.zlogout"; }
+vienv () { /usr/bin/vi "$HOME/.zshenv"; }
+viprofile () { /usr/bin/vi "$HOME/.zprofile"; }
+virc () { /usr/bin/vi "$HOME/.zshrc"; }
+vilogin () { /usr/bin/vi "$HOME/.zlogin"; }
+vilogout () { /usr/bin/vi "$HOME/.zlogout"; }
 whichos () { echo $(uname); }
 
 # ABOUT FIREWALL MANAGEMENT TOOL
@@ -111,9 +115,7 @@ shspeed () { if [ -z $1 ]; then 1=1; fi; for i in {1..$1}; do /usr/bin/time $SHE
 p () {
 	if [ $# -eq 0 ]; then cd ..
 	elif [ $# -eq 1 ]; then
-		if [[ $1 =~ '^[0-9]+$' ]]; then
-			if [[ $1 == 0 ]]; then pwd
-			else printf -v cdpFull '%*s' $1; cd "${cdpFull// /"../"}"; fi
+		if [[ $1 =~ '^[0-9]+$' ]]; then if [[ $1 == 0 ]]; then pwd; else printf -v cdpFull '%*s' $1; cd "${cdpFull// /"../"}"; fi
 		elif [[ $1 =~ '^[p]+$' ]]; then pwd
 		elif [[ $1 =~ '^[b]+$' ]] || [[ $1 == - ]]; then cd -
 		elif [[ $1 =~ '^[r]+$' ]] || [[ $1 == / ]]; then cd /
