@@ -73,6 +73,7 @@ cdp () { cd "$@" && pwd; }
 cdr () { cd /"$@"; }
 cdh () { cd ~/"$@"; }
 his () { history "$@"; }
+src () { source "$@"; }
 cls () { clear; }
 clr () { reset; }
 clh () { echo -n > ~/.zsh_history && history -p && exec $SHELL -l; }
@@ -99,8 +100,8 @@ macslp () {
 		else echo "usage: macslp on/off "; fi
 	else echo "usage: macslp on/off "; fi
 }
-if [ -d $ICLOUD_HOME ]; then icloud () { cd $ICLOUD_HOME; ls -A; }; fi
-if [ -d $DROPBOX_HOME ]; then dropbox () { cd $DROPBOX_HOME; ls -A; }; fi
+if [ -d $ICLOUD_HOME ]; then icloud () { cd $ICLOUD_HOME; ls; }; fi
+if [ -d $DROPBOX_HOME ]; then dropbox () { cd $DROPBOX_HOME; ls; }; fi
 ip () { command ipconfig "$@"; }
 dif () { diff $1 $2 | bat -l diff; }
 dfr () { diff -u $1 $2 | diffr --line-numbers; }

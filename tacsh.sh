@@ -313,6 +313,7 @@ funcGenTacSh() {
     funcAddTacSh "cdr () { cd /\"\$@\"; }"
     funcAddTacSh "cdh () { cd ~/\"\$@\"; }"
     funcAddTacSh "his () { history \"\$@\"; }"
+    funcAddTacSh "src () { source \"\$@\"; }"
     funcAddTacSh "cls () { clear; }"
     funcAddTacSh "clr () { reset; }"
     if [ $shName = "zsh" ]; then
@@ -347,9 +348,9 @@ funcGenTacSh() {
         funcAddTacSh "\t\telse echo \"usage: macslp on/off \"; fi"
         funcAddTacSh "\telse echo \"usage: macslp on/off \"; fi"
         funcAddTacSh "}"
-        funcAddTacSh "if [ -d \$ICLOUD_HOME ]; then icloud () { cd \$ICLOUD_HOME; ls -A; }; fi"
+        funcAddTacSh "if [ -d \$ICLOUD_HOME ]; then icloud () { cd \$ICLOUD_HOME; ls; }; fi"
     fi
-    funcAddTacSh "if [ -d \$DROPBOX_HOME ]; then dropbox () { cd \$DROPBOX_HOME; ls -A; }; fi"
+    funcAddTacSh "if [ -d \$DROPBOX_HOME ]; then dropbox () { cd \$DROPBOX_HOME; ls; }; fi"
     if [ $keName = "Darwin" ] || [ $keName = "MinGW64" ]; then
         funcAddTacSh "ip () { command ipconfig \"\$@\";  }" 
     fi

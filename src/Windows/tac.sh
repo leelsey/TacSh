@@ -54,6 +54,7 @@ cdp () { cd "$@" && pwd; }
 cdr () { cd /"$@"; }
 cdh () { cd ~/"$@"; }
 his () { history "$@"; }
+src () { source "$@"; }
 cls () { clear; }
 clr () { reset; }
 clh () { history -c && exec $SHELL -l; }
@@ -69,7 +70,7 @@ snvi () { sudo nvim "$@"; }
 snvim () { sudo nvim "$@"; }
 pings () { ping -a "$@"; }
 pingt () { ping -a -c 10 "$@"; }
-if [ -d $DROPBOX_HOME ]; then dropbox () { cd $DROPBOX_HOME; ls -A; }; fi
+if [ -d $DROPBOX_HOME ]; then dropbox () { cd $DROPBOX_HOME; ls; }; fi
 dif () { diff $1 $2 | bat -l diff; }
 dfr () { diff -u $1 $2 | diffr --line-numbers; }
 gsdif () { while [[ $# -gt 0 ]]; do git show "${1}" | bat -l diff; shift; done; }
